@@ -29,4 +29,14 @@ ssdk setup
 fluvio cluster start
 ```
 
-You should be all set
+You should be all set.
+
+### Operators
+
+Working examples for each operator type:
+
+* [filter](operators/filter.md)
+* [map](operators/map.md)
+* [filter-map](operators/filter-map.md)
+
+### Workflows
