@@ -94,6 +94,9 @@ Produce on `words`:
 
 ```bash
 fluvio produce words
+```
+
+```bash
 "one"
 "two"
 "three"
@@ -119,6 +122,11 @@ Read from `long-words` to see validate the result
 
 ```bash
 fluvio consume long-words -B
+```
+
+Returns only long words:
+
+```bash
 "three"
 "four"
 "five"
