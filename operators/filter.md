@@ -145,6 +145,8 @@ Returns only long words:
 
 ## Clean-up
 
-1. Stop ssdk processing
+Stop the `ssdk` runtime:
+`````
+1. Stop ssdk processing; type `stop` or `<ctrl>-c`
 2. Delete topics `words` & `long-words`
 3. Remove `filter-example` directory
