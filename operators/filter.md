@@ -2,7 +2,7 @@
 
 Filter operator takes a record and return a `bool`, if true the record is passed to the next operator, if false the record is dropped.
 
-### Example
+## Example
 
 In the following example, we use the filter operator to remove all works shorter than four letters.
 
