@@ -6,8 +6,9 @@ Filter operator takes a record and return a `bool`, if true the record is passed
 
 In the following example, we use the filter operator to remove all works shorter than four letters.
 
+### 1. Create workflow file
 
-1. Create a file `filter-example.yaml` and copy/paste the following configuration:
+Create a file `filter-example.yaml` and copy/paste the following configuration:
 
 ```yaml
 apiVersion: 0.1.0
@@ -67,20 +68,24 @@ services:
       id: long-words
 ```
 
-2. Use fluvio CLI to create `words` and `long-words` topics on your cluster:
+### 2. Add source & target topics
+
+Use fluvio CLI to create `words` and `long-words` topics on your cluster:
 
 ```bash
 fluvio topic create words
 fluvio topic create long-words
 ```
 
-3. Use SSDK generate to build build the project:
+### 3. Build and Run Project
+
+Use SSDK generate to build build the project:
 
 ```bash
 ssdk generate -w ./filter-example.yaml
 ```
 
-4. In the new project directory, compile and run
+In the new project directory, compile and run
 
 ```bash
 cd filter-example
@@ -88,13 +93,15 @@ ssdk build
 ssdk run
 ```
 
-5. Test the stateful service:
+### 4. Test the Project
 
 Produce on `words`:
 
 ```bash
 fluvio produce words
 ```
+
+Produce the following words:
 
 ```bash
 "one"
@@ -118,7 +125,7 @@ Too short -> six - filtered out
 Too short -> ten - filtered out
 ```
 
-Read from `long-words` to see validate the result
+Read from `long-words` to see the result:
 
 ```bash
 fluvio consume long-words -B
@@ -136,7 +143,7 @@ Returns only long words:
 ```
 
 
-### Clean-up
+## Clean-up
 
 1. Stop ssdk processing
 2. Delete topics `words` & `long-words`
