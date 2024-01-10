@@ -1,0 +1,120 @@
+apiVersion: 0.1.0
+meta:
+  name: wordcount-window
+  version: 0.1.0
+  namespace: my-org
+
+config:
+  # Data format converter for reading & writing to topics.
+  #   - json, raw
+  converter: json
+
+  # Consumers need to know where to start reading when the project is first started
+  #   - {position: Begining, value: 0}
+  #   - {position: End, value: 2}
+  #   - {position: Offset, value: 23}
+  consumer:
+    default_starting_offset:
+      value: 0 
+      position: End
+
+types:
+  # Schema for the input topic
+  sentence:
+    type: string
+
+  # Schema for the aggregate logic and output topic
+  word-count:
+    type: object
+    properties:
+      word:
+        type: string
+      count:
+        type: u32
+
+  # Schema for the output topic
+  top-words:
+    type: list
+    items:
+      type: word-count
+
+topics:
+  # topic definitions, schema, add converters that are different from config.converter.
+  sentence:
+    name: sentence
+    schema:
+      value:
+        type: string
+        converter: raw
+  most-used-words:
+    name: most-used-words
+    schema:
+      value:
+        type: top-words
+
+services:
+  # Service definition the input and output topics, and the transformations.
+  word-processing-window:
+    source:
+      type: topic
+      id: sentence
+
+    transforms:
+      window:
+        tumbling:
+          duration: 20s
+
+      states:
+        count-per-word:
+          type: key-value
+          properties:
+            key:
+              type: string
+            value:
+              type: u32
+
+      steps:
+        # Split the sentence into words
+        - operator: flat-map
+          run: |
+            fn split_sequence(sentence: String) -> Result<Vec<String>, String> {
+              Ok(sentence.split_whitespace().map(String::from).collect())
+            }            
+
+        # Instruct the engine to apply the timestamp from the record metadata for the watermark operator
+        - operator: assign-timestamp
+          run: |
+            fn assign_timestamp_fn(value: String, event_time: i64) -> Result<i64, String> {
+              Ok(event_time)
+            }            
+
+        # Group by lowercase words with non-alphanumeric characters
+        - operator: group-by
+          run: |
+            fn group_by_word(word: String) -> Result<String, String> {
+              Ok(word.to_lowercase().chars().filter(|c| c.is_alphanumeric()).collect())
+            }            
+
+        # Within each group, increment the keyword by 1.
+        - operator: process
+          run: |
+            fn increment_word_count(word: String) -> Result<(), String> {
+              count_per_word().increment(1);
+              Ok(())
+              }            
+
+      flush:
+        # On flush, perform an aggregate operation to get the top 3 words sorted by count.
+        operator: aggregate
+        run: |
+          fn aggregate_wordcount(word_counts: CountPerWord) -> Result<TopWords, String> {
+            let mut top3 = word_counts;
+            top3.sort_by(|a, b| a.value.cmp(&b.value));
+            top3.reverse();
+            top3.truncate(3);
+            Ok(top3.iter().map( | entry | WordCount { word: entry.key.clone(), count: entry.value }).collect())
+          }          
+
+    sink:
+      type: topic
+      id: most-used-words

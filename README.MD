@@ -1,6 +1,6 @@
-# Stateful Services Training Guide
+# Stateful Services Examples
 
-Working examples to help Fluvio users come up to speed with Stateful Services.
+This repository has working examples of functions, services, and data pipelines to get you up to speed with Stateful Services.
 
 ### Prerequisites
 
@@ -15,27 +15,18 @@ rustup update
 
 ```bash
 curl -fsS https://hub.infinyon.cloud/install/install.sh | bash
+fvm install 0.11.2-ssdk-preview4
 ```
 
-3. Setup SSDK
-
-```bash
-ssdk setup
-```
-
-4. Start a cluster
+3. Start a cluster
 
 ```bash
 fluvio cluster start
 ```
 
+## Examples
 
-## Operators
+The examples are organized by their core functionality.
 
-Examples on how to use the operators:
-
-* [filter](operators/filter.md)
-* [map](operators/map.md)
-* [filter-map](operators/filter-map.md)
-
-## Workflows
+#### Window Processing
+* [word-count](window-processing/word-count/README.MD)
