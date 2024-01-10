@@ -58,9 +58,11 @@ $ echo "keep your eyes on the stars and your feet on the ground" | fluvio produc
 $ echo "obstacles are those frightful things you see when you take your eyes off your goal" | fluvio produce sentence
 ```
 
-**Note:** The watermark closes the window on event. Hence, if you stop adding events before the watermark triggers, the window stays open, and nothing gets produced.
+**Note:**
 
-This is the expected behavior as, in most cases, external entities will continuously produce data, and you won’t be left with an open window. To force the window to flush, produce one more record after the 20-second mark.
+> The watermark closes the window on event. Hence, if you stop adding events before the watermark triggers, the window stays open, and nothing gets produced. This is the expected behavior as, in most cases, external entities will continuously produce data, and you won’t be left with an open window. To force the window to flush, produce one more record after the 20-second mark.
+
+In subsequent releases, we’ll add an idle watermark trigger to cover manual testing.
 
 In subsequent releases, we’ll add an idle watermark trigger to cover manual testing.
 
