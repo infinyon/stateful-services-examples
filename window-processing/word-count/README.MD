@@ -44,9 +44,11 @@ Produce sentences to in `sentence` topic:
 ```bash
 echo "behind every great man is a woman rolling her eyes" | fluvio produce sentence
 ```
+
 ```bash
 $ echo "the eyes reflect what is in the heart and soul" | fluvio produce sentence
 ```
+
 ```bash
 $ echo "keep your eyes on the stars and your feet on the ground" | fluvio produce sentence
 ```
