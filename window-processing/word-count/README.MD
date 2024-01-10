@@ -47,15 +47,15 @@ echo "behind every great man is a woman rolling her eyes" | fluvio produce sente
 ```
 
 ```bash
-$ echo "the eyes reflect what is in the heart and soul" | fluvio produce sentence
+echo "the eyes reflect what is in the heart and soul" | fluvio produce sentence
 ```
 
 ```bash
-$ echo "keep your eyes on the stars and your feet on the ground" | fluvio produce sentence
+echo "keep your eyes on the stars and your feet on the ground" | fluvio produce sentence
 ```
 
 ```bash
-$ echo "obstacles are those frightful things you see when you take your eyes off your goal" | fluvio produce sentence
+echo "obstacles are those frightful things you see when you take your eyes off your goal" | fluvio produce sentence
 ```
 
 **Note:**
