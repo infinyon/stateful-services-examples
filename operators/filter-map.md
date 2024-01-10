@@ -1,2 +1,0 @@
-# Operator `filter-map`
-
