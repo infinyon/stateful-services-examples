@@ -64,8 +64,6 @@ $ echo "obstacles are those frightful things you see when you take your eyes off
 
 In subsequent releases, we’ll add an idle watermark trigger to cover manual testing.
 
-In subsequent releases, we’ll add an idle watermark trigger to cover manual testing.
-
 
 #### 2. Consume from Sink Topic
 
