@@ -2,7 +2,9 @@
 
 In this example, we'll develop a data pipeline for window processing that analyzes sentences and computes the three most frequently used words in 20-second intervals.
 
-<center><img width="600" src="word-count.jpg"></center>
+<p align="center">
+ <img width="700" src="word-count.jpg">
+</p>
 
 ## Prerequisites
 
