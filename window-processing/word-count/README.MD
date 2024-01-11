@@ -70,7 +70,7 @@ In subsequent releases, we’ll add an idle watermark trigger to cover manual te
 Consume from `most-used-words` topic:
 
 ```bash
-fluvio consume most-used-words -B
+fluvio consume most-used-words -B -O json
 ```
 
 Depending when the 20 second window triggered, you'll see the top 3 words:
