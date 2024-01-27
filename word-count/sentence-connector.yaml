@@ -1,0 +1,19 @@
+# sentence-connector.yml
+apiVersion: 0.1.0
+meta:
+  version: 0.3.1
+  name: sentence-connector
+  type: http-source
+  topic: sentence 
+http:
+  endpoint: https://demo-data.infinyon.com/api/quote-stream
+  method: GET
+  stream: true
+  delimiter: "\n\n"
+transforms:
+  - uses: infinyon/jolt@0.3.0
+    with:
+      spec:
+        - operation: shift 
+          spec:
+            quote: ""

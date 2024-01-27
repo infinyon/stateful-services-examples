@@ -4,21 +4,21 @@ This repository has working examples of functions, services, and data pipelines 
 
 ### Prerequisites
 
-1. Install & update Rust
+#### Install & update Rust
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup update
 ```
 
-2. Install Fluvio & SSDK
+#### Install Fluvio & SSDK
 
 ```bash
 curl -fsS https://hub.infinyon.cloud/install/install.sh | bash
 fvm install 0.11.2-ssdk-preview4
 ```
 
-3. Start a cluster
+#### Start a cluster
 
 ```bash
 fluvio cluster start

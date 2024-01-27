@@ -64,7 +64,6 @@ echo "obstacles are those frightful things you see when you take your eyes off y
 
 In subsequent releases, we’ll add an idle watermark trigger to cover manual testing.
 
-
 #### 2. Consume from Sink Topic
 
 Consume from `most-used-words` topic:
@@ -107,6 +106,11 @@ show state word-processing-window/count-per-word/state
 ```
 
 **Note:** The data pipeline stops processing records when you close the intractive editor. To resume processing, run `ssdk run` again.
+
+
+#### 4. Produce Continuous Data (optional)
+
+You may also start an http-source connector that continuously feed data to the `sentence` topic. For instructions, checkout [Connector.md](Connector.md).
 
 
 

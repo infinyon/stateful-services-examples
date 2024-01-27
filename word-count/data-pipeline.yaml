@@ -65,8 +65,8 @@ services:
           duration: 20s
 
       states:
-        count-per-word:
-          type: key-value
+        - name: count-per-word
+          type: keyed-state
           properties:
             key:
               type: string
@@ -89,14 +89,14 @@ services:
             }            
 
         # Group by lowercase words with non-alphanumeric characters
-        - operator: group-by
+        - operator: assign-key
           run: |
             fn group_by_word(word: String) -> Result<String, String> {
               Ok(word.to_lowercase().chars().filter(|c| c.is_alphanumeric()).collect())
             }            
 
         # Within each group, increment the keyword by 1.
-        - operator: process
+        - operator: update-state
           run: |
             fn increment_word_count(word: String) -> Result<(), String> {
               count_per_word().increment(1);
