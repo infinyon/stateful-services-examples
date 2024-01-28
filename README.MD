@@ -2,7 +2,7 @@
 
 This repository has working examples of functions, services, and data pipelines to get you up to speed with Stateful Services.
 
-### Prerequisites
+## Prerequisites
 
 #### Install & update Rust
 
@@ -29,4 +29,8 @@ fluvio cluster start
 The examples are organized by their core functionality.
 
 #### Window Processing
-* [word-count](window-processing/word-count/README.MD)
+* [word-count](window-processing/word-count/Readme.md)
+
+
+#### References
+* [Connectors](Connectors.md)
