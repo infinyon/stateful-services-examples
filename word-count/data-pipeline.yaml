@@ -81,21 +81,21 @@ services:
               Ok(sentence.split_whitespace().map(String::from).collect())
             }            
 
-        # Instruct the engine to apply the timestamp from the record metadata for the watermark operator
+        # Instruct the engine to apply the timestamp from the event metadata for the watermark operator
         - operator: assign-timestamp
           run: |
-            fn assign_timestamp_fn(value: String, event_time: i64) -> Result<i64, String> {
+            fn assign_event_timestamp(value: String, event_time: i64) -> Result<i64, String> {
               Ok(event_time)
             }            
 
-        # Group by lowercase words with non-alphanumeric characters
+        # Assign a partition key to divide the data set for the update operation
         - operator: assign-key
           run: |
-            fn group_by_word(word: String) -> Result<String, String> {
+            fn assign_word_key(word: String) -> Result<String, String> {
               Ok(word.to_lowercase().chars().filter(|c| c.is_alphanumeric()).collect())
             }            
 
-        # Within each group, increment the keyword by 1.
+        # Retrieve state by key and increment by 1.
         - operator: update-state
           run: |
             fn increment_word_count(word: String) -> Result<(), String> {
@@ -104,11 +104,11 @@ services:
               }            
 
       flush:
-        # On flush, perform an aggregate operation to get the top 3 words sorted by count.
+        # Read the full state and compute the top 3 words sorted by count.
         operator: aggregate
         run: |
-          fn aggregate_wordcount(word_counts: CountPerWord) -> Result<TopWords, String> {
-            let mut top3 = word_counts;
+          fn compute_most_used_words(count_per_word: CountPerWord) -> Result<TopWords, String> {
+            let mut top3 = count_per_word;
             top3.sort_by(|a, b| a.value.cmp(&b.value));
             top3.reverse();
             top3.truncate(3);
