@@ -29,8 +29,8 @@ fluvio cluster start
 The examples are organized by their core functionality.
 
 #### Window Processing
-* [word-count](window-processing/word-count/Readme.md)
+* [word-count](/word-count/README.MD)
 
 
 #### References
-* [Connectors](Connectors.md)
+* [connectors](CONNECTORS.MD)
