@@ -110,7 +110,7 @@ show state word-processing-window/count-per-word/state
 
 #### 4. Produce Continuous Data (optional)
 
-You may also start an http-source connector that continuously feed data to the `sentence` topic. For instructions, checkout [connector.md](connector.md).
+You may also start an http-source connector that continuously feed data to the `sentence` topic. For instructions, checkout [connectors](./connectors/).
 
 
 

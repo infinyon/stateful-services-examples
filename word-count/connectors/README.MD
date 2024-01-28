@@ -1,6 +1,8 @@
 # Connector to Generate Sentences
 
-Use an http-source streaming connector to read quotes from the InfinyOn synthetic data server. Checkout [Connectors.md](../Connectors.md) for additional information.
+Use an http-source streaming connector to read quotes from the InfinyOn synthetic data server. Checkout [connectors.md](../../connectors.md) for additional information.
+
+The connector configuration file is located at [sentence-connector.yaml](sentence-connector.yaml).
 
 ### 1. Download HTTP Source Connector
 
