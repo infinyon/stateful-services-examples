@@ -33,4 +33,4 @@ The examples are organized by their core functionality.
 
 
 #### References
-* [connectors](CONNECTORS.MD)
+* [connectors](connectors.md)
