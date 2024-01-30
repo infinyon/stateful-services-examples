@@ -26,11 +26,9 @@ fluvio cluster start
 
 ## Examples
 
-The examples are organized by their core functionality.
-
-#### Window Processing
 * [word-counter](/word-counter/)
+* [car-counter](/car-counter/)
 
 
-#### References
+## References
 * [connectors](connectors.md)
