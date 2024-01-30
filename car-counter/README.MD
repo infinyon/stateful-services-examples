@@ -1,4 +1,4 @@
-# Car Count Pipeline
+# Car Counter Data Pipeline
 
 Car count data pipeline uses the http-source conector to stream synthetic data from `data.infinyon.com` at a rate of 2 events per second. The events send car data from two semaphores, Saratoga and Sunnyvale. and the data pipeline performs the following operations:
 

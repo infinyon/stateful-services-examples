@@ -1,6 +1,6 @@
 # Stateful Services Examples
 
-This repository has working examples of functions, services, and data pipelines to get you up to speed with Stateful Services.
+This repository has data pipeline examples to get you up to speed quickly with Stateful Services.
 
 ## Prerequisites
 
@@ -27,8 +27,7 @@ fluvio cluster start
 ## Examples
 
 * [word-counter](/word-counter/)
-* [car-counter](/car-counter/)
-
+* [bank-processing](/bank-processing/)
 
 ## References
 * [connectors](connectors.md)

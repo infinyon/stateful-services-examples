@@ -1,4 +1,4 @@
-# Word Count Pipeline
+# Word Counter Data Pipeline
 
 Word Count is a data pipeline for window processing that analyzes sentences and computes the three most frequently used words in 20-second intervals.
 
@@ -6,15 +6,24 @@ Word Count is a data pipeline for window processing that analyzes sentences and 
  <img width="700" src="img/word-counter.jpg">
 </p>
 
-## Prerequisites
+## Pipeline Primitives
 
-* Follow the instructions on the front-page to [Install SSDK & Start a Cluster].
+The pipeline uses the following primitives:
+* _window_
+  * _assign-timestamp_
+  * _assign-key_
+  * _update-state_
+  * _flush_ 
+    * _aggregate_
+* _flat-map_
+* _states_
 
 
 ## Step-by-step
 
 Take a look at the [data-pipeline.yaml](./data-pipeline.yaml) to get an idea of what we're doing.
 
+Make sure to [Install SSDK and start a Fluvio cluster].
 
 ### 1. Generate and Build
 
@@ -114,4 +123,4 @@ You may also start an http-source connector that continuously feed data to the `
 
 
 
-[Install SSDK & Start a Cluster]: /README.MD#prerequisites
+[Install SSDK and start a Fluvio cluster]: /README.MD#prerequisites
