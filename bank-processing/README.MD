@@ -12,13 +12,12 @@ The bank processing data pipeline ingests business events such as deposits, with
 ## Pipeline Primitives
 
 The pipeline uses the following primitives:
-* _window_
-  * _assign-timestamp_
-  * _assign-key_
-  * _update-state_
-  * _flush_ 
-    * _aggregate_
+* _map_
+* _filter_
+* _filter_map_
 * _flat-map_
+* _assign-key_
+* _update_state_
 * _states_
 
 
