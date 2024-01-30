@@ -72,7 +72,7 @@ Check state in `ssdk` terminal:
  GB56DVTE70858022060682  1000     Duncan Taylor
 ```
 
-#### 3.2 Withdrawal
+#### 3.2 Deposit
 
 Produce an `deposit` events to `business-events` topic :
 
