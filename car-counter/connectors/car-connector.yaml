@@ -1,0 +1,12 @@
+# car-connector.yml
+apiVersion: 0.1.0
+meta:
+  version: 0.3.1
+  name: car-connector
+  type: http-source
+  topic: car-events 
+http:
+  endpoint: https://demo-data.infinyon.com/api/car-stream
+  method: GET
+  stream: true
+  delimiter: "\n\n"

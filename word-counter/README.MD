@@ -1,6 +1,6 @@
-# Word Count Window Processing
+# Word Count Pipeline
 
-In this example, we'll develop a data pipeline for window processing that analyzes sentences and computes the three most frequently used words in 20-second intervals.
+Word Count is a data pipeline for window processing that analyzes sentences and computes the three most frequently used words in 20-second intervals.
 
 <p align="center">
  <img width="700" src="img/word-counter.jpg">
