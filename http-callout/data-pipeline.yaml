@@ -7,7 +7,6 @@ meta:
 config:
   converter: json
 
-# {"maker":"Volvo","model":"V90","type":"Wagon","color":"beige","license":"1SOU433","fuel":"gasoline","location":"Saratoga","mph":11,"timestamp":"2024-01-30T03:53:29.712Z"}
 types:
   car:
     type: object
@@ -19,6 +18,7 @@ types:
       typ:
         type: string
         alias: type
+        
   maker:
     type: object
     properties:
