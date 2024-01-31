@@ -2,7 +2,7 @@ apiVersion: 0.1.0
 meta:
   name: word-counter
   version: 0.1.0
-  namespace: my-org
+  namespace: examples
 
 config:
   # Data format converter for reading & writing to topics.

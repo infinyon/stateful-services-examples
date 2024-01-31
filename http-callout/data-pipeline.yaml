@@ -1,0 +1,71 @@
+apiVersion: 0.1.0
+meta:
+  name: http-callout
+  version: 0.1.0
+  namespace: examples
+  
+config:
+  converter: json
+
+# {"maker":"Volvo","model":"V90","type":"Wagon","color":"beige","license":"1SOU433","fuel":"gasoline","location":"Saratoga","mph":11,"timestamp":"2024-01-30T03:53:29.712Z"}
+types:
+  car:
+    type: object
+    properties:
+      maker: 
+        type: string
+      model:
+        type: string
+      typ:
+        type: string
+        alias: type
+  maker:
+    type: object
+    properties:
+      maker: 
+        type: string
+      country:
+        type: string
+      continent:
+        type: string
+
+topics:
+  cars:
+    schema:
+      value:
+        type: car
+  
+  makers:
+    schema:
+      value:
+        type: maker
+
+services:
+  lookup-car-maker:
+    source:
+      type: topic
+      id: cars
+
+    transforms:
+      steps:
+        - operator: map
+          capabilities:
+            - http
+          run: |
+            fn get_car_maker(car: Car) -> Result<Maker, String> {
+              let maker = car.maker;
+              let url = format!("https://demo-data.infinyon.com/api/maker/{maker}");
+              let request = ssdk_http::http::Request::builder().uri(url).body("")
+                .map_err(|e| e.to_string())?;
+              
+              let response = ssdk_http::blocking::send(request).map_err(|e| e.to_string())?;
+              let body = response.into_body();
+              let m: Maker = serde_json::from_slice(&*body).map_err(|err| err.to_string())?;
+
+              Ok(m)
+            }
+            
+    sink:
+      type: topic
+      id: makers
+
