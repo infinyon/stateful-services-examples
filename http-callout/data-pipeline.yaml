@@ -6,6 +6,10 @@ meta:
   
 config:
   converter: json
+  consumer:
+    default_starting_offset:
+      value: 0 
+      position: End
 
 types:
   car:
