@@ -24,11 +24,15 @@ fvm install 0.11.3-ssdk-preview5
 fluvio cluster start
 ```
 
-## Examples
+## Data Pipeline Examples
 
 * [bank-processing](/bank-processing/)
 * [http-callout](/http-callout/)
 * [word-counter](/word-counter/)
+
+## Operator Examples
+
+* [filter-map](/operators/filter-map/)
 
 ## References
 * [connectors](connectors.md)
