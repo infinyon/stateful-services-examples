@@ -26,9 +26,9 @@ fluvio cluster start
 
 ## Data Pipeline Examples
 
-* [bank-processing](/bank-processing/)
-* [http-callout](/http-callout/)
-* [word-counter](/word-counter/)
+* [bank-processing](/pipelines/bank-processing/)
+* [http-callout](/pipelines/http-callout/)
+* [word-counter](/pipelines/word-counter/)
 
 ## Operator Examples
 
