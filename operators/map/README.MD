@@ -1,6 +1,6 @@
-# FilterMap Operator Example
+# Map Operator Example
 
-Example of how to use the filter-map operator. In this example, the filter-map operation transforms sentences over 10 characters to uppercase and drops all others.
+Example of how to use the map operator. In this example, the map operator transforms sentences to uppercase.
 
 ## Step-by-step
 
@@ -27,13 +27,13 @@ Run the pipeline:
 
 ### 3. Test the Pipeline
 
-Produce to short and long sentences:
+Produce sentences:
 
 ```bash
 fluvio produce sentence
 ```
 
-Consume from uppercase to see them transformed:
+Consume from `uppercase` to see them transformed:
 
 ```bash
 fluvio consume uppercase
