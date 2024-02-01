@@ -2,32 +2,22 @@
 
 Example of how to use the map operator. In this example, the map operator transforms sentences to uppercase.
 
-## Step-by-step
+* Checkout the [data-pipeline.yaml](./data-pipeline.yaml).
+* Make sure to [Install SSDK and start a Fluvio cluster].
 
-Take a look at the [data-pipeline.yaml](./data-pipeline.yaml) to get an idea of what we're doing.
+### 1. Run Data Pipeline
 
-Make sure to [Install SSDK and start a Fluvio cluster].
-
-### 1. Generate and Build
-
-Generate and Build the data pipeline;
+With the `data-pipeline.yaml` file in the current directory, run the following commands:
 
 ```bash
 ssdk generate
 ssdk build
+ssdk run
 ```
 
-### 2. Run the Pipeline
+### 2. Test Data Pipeline
 
-Run the pipeline:
-
-```bash
- ssdk run
-```
-
-### 3. Test the Pipeline
-
-Produce sentences:
+Produce to short and long sentences:
 
 ```bash
 fluvio produce sentence
@@ -38,3 +28,5 @@ Consume from `uppercase` to see them transformed:
 ```bash
 fluvio consume uppercase
 ```
+
+[Install SSDK and start a Fluvio cluster]: /README.MD#prerequisites

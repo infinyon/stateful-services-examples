@@ -1,0 +1,37 @@
+apiVersion: 0.1.0
+meta:
+  name: filter-example
+  version: 0.1.0
+  namespace: examples
+  
+config:
+  converter: raw
+
+topics:
+  sentence:
+    schema:
+      value:
+        type: string
+  
+  question:
+    schema:
+      value:
+        type: string
+
+services:
+  filter-service:
+    source:
+      type: topic
+      id: sentence
+
+    transforms:
+      steps:
+        - operator: filter
+          run: |
+            fn only_questions(input: String) -> Result<bool, String> {
+              Ok(input.contains("?"))
+            }
+          
+    sink:
+      type: topic
+      id: question

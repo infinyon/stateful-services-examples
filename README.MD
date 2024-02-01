@@ -34,6 +34,7 @@ fluvio cluster start
 
 * [map](/operators/map/)
 * [filter-map](/operators/filter-map/)
+* [filter](/operators/filter/)
 
 ## References
 * [connectors](connectors.md)
