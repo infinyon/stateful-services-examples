@@ -26,8 +26,9 @@ fluvio cluster start
 
 ## Examples
 
-* [word-counter](/word-counter/)
 * [bank-processing](/bank-processing/)
+* [http-callout](/http-callout/)
+* [word-counter](/word-counter/)
 
 ## References
 * [connectors](connectors.md)
