@@ -5,33 +5,44 @@ meta:
   namespace: examples
   
 config:
-  converter: raw
+  converter: json
+
+types:
+  user:
+    type: object
+    properties:
+      name: 
+        type: string
+      ssn:
+        type: string
 
 topics:
-  sentence:
+  users-private:
     schema:
       value:
-        type: string
+        type: user
   
-  uppercase:
+  users-public:
     schema:
       value:
-        type: string
+        type: user
 
 services:
   map-service:
     source:
       type: topic
-      id: sentence
+      id: users-private
 
     transforms:
       steps:
         - operator: map
           run: |
-            fn sentence_to_uppercase(input: String) -> Result<String, String> {
-              Ok(input.to_uppercase())
+            fn mask_ssn(user: User) -> Result<User, String> {
+              let mut u = user.clone();
+              u.ssn = u.ssn.replace(|c: char| c.is_digit(10), "*");
+              Ok(u)
             }
           
     sink:
       type: topic
-      id: uppercase
+      id: users-public
