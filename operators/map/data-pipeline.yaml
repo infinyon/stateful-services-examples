@@ -17,7 +17,7 @@ types:
         type: string
 
 topics:
-  users-private:
+  users:
     schema:
       value:
         type: user
@@ -31,7 +31,7 @@ services:
   map-service:
     source:
       type: topic
-      id: users-private
+      id: users
 
     transforms:
       steps:

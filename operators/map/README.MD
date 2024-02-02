@@ -1,6 +1,6 @@
 # Map Operator Example
 
-Example of how to use the map operator. In this example, the map operator transforms masks SSN numbers in a user record.
+Example of how to use the `map` operator. In this example, the map operator transforms masks SSN numbers in a user record.
 
 * Checkout the [data-pipeline.yaml](./data-pipeline.yaml).
 * Make sure to [Install SSDK and start a Fluvio cluster].
@@ -17,10 +17,10 @@ ssdk run
 
 ### 2. Test Data Pipeline
 
-Produce to `users-private`:
+Produce to `users`:
 
 ```bash
-fluvio produce users-private
+fluvio produce users
 ```
 
 ```bash
@@ -31,7 +31,7 @@ fluvio produce users-private
 Consume from `users-public` to see them transformed:
 
 ```bash
-fluvio produce users-public
+fluvio consume users-public
 ```
 
 ```bash

@@ -1,6 +1,6 @@
 apiVersion: 0.1.0
 meta:
-  name: filter-map-example
+  name: flat-map-example
   version: 0.1.0
   namespace: examples
   
@@ -13,29 +13,25 @@ topics:
       value:
         type: string
   
-  capitalized:
+  words:
     schema:
       value:
         type: string
 
 services:
-  filter-map-service:
+  flat-map-service:
     source:
       type: topic
       id: sentences
 
     transforms:
       steps:
-        - operator: filter-map
+        - operator: flat-map
           run: |
-            fn long_sentence_to_uppercase(input: String) -> Result<Option<String>, String> {
-              if input.len() > 10 {
-                Ok(Some(input.to_uppercase()))
-              } else {
-                Ok(None)
-              }
+            fn split_sentence(sentence: String) -> Result<Vec<String>, String> {
+              Ok(sentence.split_whitespace().map(String::from).collect())
             }
           
     sink:
       type: topic
-      id: capitalized
+      id: words

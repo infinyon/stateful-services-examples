@@ -1,6 +1,6 @@
 # FilterMap Operator Example
 
-Example of how to use the `filter-map` operator. In this example, the filter-map operation transforms sentences over 10 characters to uppercase and drops all others.
+Example of how to use the `filter-map` operator. In this example, the filter-map operation transforms sentences over 10 characters in length to uppercase and drops all others.
 
 * Checkout the [data-pipeline.yaml](./data-pipeline.yaml).
 * Make sure to [Install SSDK and start a Fluvio cluster].
@@ -20,13 +20,22 @@ ssdk run
 Produce to short and long sentences:
 
 ```bash
-fluvio produce sentence
+fluvio produce sentences
 ```
 
-Consume from `uppercase` to see them transformed:
+```bash
+say hello
+say hello world
+```
+
+Consume from `capitalized` to retrieve the result:
 
 ```bash
-fluvio consume uppercase
+fluvio consume capitalized
+```
+
+```bash
+SAY HELLO WORLD
 ```
 
 [Install SSDK and start a Fluvio cluster]: /README.MD#prerequisites

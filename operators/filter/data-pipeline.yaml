@@ -8,12 +8,12 @@ config:
   converter: raw
 
 topics:
-  sentence:
+  sentences:
     schema:
       value:
         type: string
   
-  question:
+  questions:
     schema:
       value:
         type: string
@@ -22,16 +22,16 @@ services:
   filter-service:
     source:
       type: topic
-      id: sentence
+      id: sentences
 
     transforms:
       steps:
         - operator: filter
           run: |
-            fn only_questions(input: String) -> Result<bool, String> {
+            fn filter_questions(input: String) -> Result<bool, String> {
               Ok(input.contains("?"))
             }
           
     sink:
       type: topic
-      id: question
+      id: questions

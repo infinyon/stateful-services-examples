@@ -1,6 +1,6 @@
-# FilterMap Operator Example
+# FlatMap Operator Example
 
-Example of how to use the `filter` operator. In this example, the filter operation allows all sentences that have a question mark (`?`) and drops all others.
+Example of how to use the `flat-map` operator. In this example, the flat-map operator converts sentences into words.
 
 * Checkout the [data-pipeline.yaml](./data-pipeline.yaml).
 * Make sure to [Install SSDK and start a Fluvio cluster].
@@ -17,25 +17,27 @@ ssdk run
 
 ### 2. Test Data Pipeline
 
-Produce to sentence with and without question mark (`?`):
+Produce sentences:
 
 ```bash
 fluvio produce sentences
 ```
 
 ```bash
-Hi there!
-What time is it?
+This is a test
 ```
 
-Consume from `questions` to retrieve the result:
+Consume from `words` to see them transformed:
 
 ```bash
-fluvio consume questions
+fluvio consume words
 ```
 
 ```bash
-What time is it?
+This
+is
+a
+test
 ```
 
 [Install SSDK and start a Fluvio cluster]: /README.MD#prerequisites
