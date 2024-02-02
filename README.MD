@@ -33,8 +33,10 @@ fluvio cluster start
 ## Operator Examples
 
 * [map](/operators/map/)
-* [filter-map](/operators/filter-map/)
 * [filter](/operators/filter/)
+* [filter-map](/operators/filter-map/)
+* [flat-map](/operators/flat-map/)
+
 
 ## References
 * [connectors](connectors.md)
