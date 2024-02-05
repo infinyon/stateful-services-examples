@@ -27,7 +27,7 @@ The following configuration reads a `quote` periodically (every two seconds):
 
 ```yaml
 # quotes-periodic.yaml
-apiVersion: 0.1.0
+apiVersion: 0.2.0
 meta:
   version: 0.3.1
   name: quotes-periodic
@@ -62,7 +62,7 @@ The following configuration streams from the `quote-stream` endpoint, which is p
 
 ```yaml
 # quotes-stream.yaml
-apiVersion: 0.1.0
+apiVersion: 0.2.0
 meta:
   version: 0.3.1
   name: quotes-stream
