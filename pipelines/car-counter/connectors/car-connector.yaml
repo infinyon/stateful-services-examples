@@ -1,5 +1,5 @@
 # car-connector.yml
-apiVersion: 0.1.0
+apiVersion: 0.2.0
 meta:
   version: 0.3.1
   name: car-connector
