@@ -1,10 +1,13 @@
-# car-callout-connector.yml
+# car-callout-connector.yaml
 apiVersion: 0.2.0
 meta:
   version: 0.3.1
   name: car-callout
   type: http-source
-  topic: cars 
+  topic:
+    version: 0.1.0
+    meta:
+      name: cars
 http:
   endpoint: https://demo-data.infinyon.com/api/car-stream
   method: GET
