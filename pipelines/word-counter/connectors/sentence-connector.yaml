@@ -1,10 +1,13 @@
-# sentence-connector.yml
+# sentence-connector.yaml
 apiVersion: 0.2.0
 meta:
   version: 0.3.1
   name: sentence-connector
   type: http-source
-  topic: sentence 
+  topic:
+    version: 0.1.0
+    meta:
+      name: sentence 
 http:
   endpoint: https://demo-data.infinyon.com/api/quote-stream
   method: GET
