@@ -50,7 +50,7 @@ services:
     transforms:
       steps:
         - operator: map
-          capabilities:
+          adaptors:
             - http
           run: |
             fn get_car_maker(car: Car) -> Result<Maker, String> {
