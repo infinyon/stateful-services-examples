@@ -7,13 +7,13 @@ The connector configuration file is located at [sentence-connector.yaml](sentenc
 ### 1. Download HTTP Source Connector
 
 ```bash
-cdk hub download infinyon/http-source@0.3.1
+cdk hub download infinyon/http-source@0.3.2
 ```
 
 ### 2. Start the connector
 
 ```bash
-cdk deploy start --ipkg infinyon-http-source-0.3.1.ipkg -c car-callout-connector.yaml
+cdk deploy start --ipkg infinyon-http-source-0.3.2.ipkg -c car-callout-connector.yaml
 ```
 
 ### 3. Checkout  car events
