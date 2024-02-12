@@ -36,6 +36,7 @@ fluvio cluster start
 * [filter](/operators/filter/)
 * [filter-map](/operators/filter-map/)
 * [flat-map](/operators/flat-map/)
+* [update-state](/operators/update-state/)
 
 
 ## References
