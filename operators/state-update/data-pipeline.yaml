@@ -13,7 +13,7 @@ types:
     properties:
       id:
         type: i32
-      name:
+      sensor:
           type: string
       temperature:
         type: f32
@@ -25,15 +25,15 @@ topics:
         type: temp
   
 services:
-  temp-collector:
+  save-temperature:
+
     source:
       type: topic
       id: temp-sensor
 
     transforms:
-
       states:
-        - name: temp-row
+        - name: temperature
           type: keyed-state
           properties:
             key:
@@ -41,29 +41,26 @@ services:
             value:
               type: arrow-row
               properties:
-                id:
-                  type: i32
-                name:
+                sensor:
                     type: string
                 temperature:
                   type: f32 
-                     
+
       steps:
         - operator: assign-key
           run: |
-            fn assign_key_od(temp: Temp) -> Result<i32, String> {
-              Ok(temp.id)
+            fn partition_by_id(event: Temp) -> Result<i32, String> {
+              Ok(event.id)
             }
 
         - operator: update-state
           run: |
-            fn build_temp_table(temp: Temp) -> Result<(), String> {
-              let mut row = temp_row();
+            fn update_temperature(event: Temp) -> Result<(), String> {
+              let mut temp = temperature();
               
-              row.id = temp.id;
-              row.name = temp.name;
-              row.temperature = temp.temperature;
-              row.update();
+              temp.sensor = event.sensor;
+              temp.temperature = event.temperature;
+              temp.update();
 
               Ok(())
             }
