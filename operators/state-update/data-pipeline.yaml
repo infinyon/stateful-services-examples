@@ -30,38 +30,40 @@ services:
       type: topic
       id: temp-sensor
 
-    states:
-      - name: temp-row
-        type: keyed-state
-        properties:
-          key:
-            type: string
-          value:
-            type: arrow-row
-            properties:
-              id:
-                type: i32
-              name:
-                  type: string
-              temperature:
-                type: f32
-
     transforms:
-      - operator: assign-key
-        run: |
-          fn assign_key_od(temp: Temp) -> Result<i32, String> {
-            Ok(temp.id)
-          }
 
-      - operator: update-state
-        run: |
-          fn build_temp_table(temp: Temp) -> Result<(), String> {
-            let mut row = temp_row();
-            
-            row.id = temp.id;
-            row.name = temp.name;
-            row.temperature = temp.temperature;
-            row.update();
+      states:
+        - name: temp-row
+          type: keyed-state
+          properties:
+            key:
+              type: string
+            value:
+              type: arrow-row
+              properties:
+                id:
+                  type: i32
+                name:
+                    type: string
+                temperature:
+                  type: f32 
+                     
+      steps:
+        - operator: assign-key
+          run: |
+            fn assign_key_od(temp: Temp) -> Result<i32, String> {
+              Ok(temp.id)
+            }
 
-            Ok(())
-          }
+        - operator: update-state
+          run: |
+            fn build_temp_table(temp: Temp) -> Result<(), String> {
+              let mut row = temp_row();
+              
+              row.id = temp.id;
+              row.name = temp.name;
+              row.temperature = temp.temperature;
+              row.update();
+
+              Ok(())
+            }
