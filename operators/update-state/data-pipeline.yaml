@@ -47,9 +47,10 @@ services:
                   type: f32 
 
       steps:
+      
         - operator: assign-key
           run: |
-            fn partition_by_id(event: Temp) -> Result<i32, String> {
+            fn key_by_id(event: Temp) -> Result<i32, String> {
               Ok(event.id)
             }
 
