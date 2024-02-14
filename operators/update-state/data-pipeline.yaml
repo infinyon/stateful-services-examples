@@ -42,12 +42,11 @@ services:
               type: arrow-row
               properties:
                 sensor:
-                    type: string
+                  type: string
                 temperature:
                   type: f32 
 
       steps:
-      
         - operator: assign-key
           run: |
             fn key_by_id(event: Temp) -> Result<i32, String> {

@@ -2,7 +2,7 @@
 
 Use an http-source streaming connector to read cars from the InfinyOn synthetic data server. 
 
-The connector configuration file is located at [sentence-connector.yaml](sentence-connector.yaml).
+The connector configuration file is located at [car-connector.yaml](car-connector.yaml).
 
 ### 1. Download HTTP Source Connector
 
