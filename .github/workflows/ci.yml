@@ -14,15 +14,15 @@ jobs:
       strategy:
         matrix:
           example_path: [
-            "operators/filter",
-            "operators/filter-map",
-            "operators/flat-map",
-            "operators/map",
-            "operators/ref-state",
-            "operators/update-state",
-            "pipelines/bank-processing",
-            "pipelines/http-callout",
-            "pipelines/word-counter",
+            "functions/filter",
+            "functions/filter-map",
+            "functions/flat-map",
+            "functions/map",
+            "functions/ref-state",
+            "functions/update-state",
+            "use-cases/bank-processing",
+            "use-cases/http-callout",
+            "use-cases/word-counter",
           ]
           ssdk-version: [ssdk-preview5, ssdk-preview6-dev]
       steps:

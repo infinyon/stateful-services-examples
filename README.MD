@@ -24,19 +24,23 @@ fvm install ssdk-preview5
 fluvio cluster start
 ```
 
-## Data Pipeline Examples
+## Use Cases
 
-* [bank-processing](/pipelines/bank-processing/)
-* [http-callout](/pipelines/http-callout/)
-* [word-counter](/pipelines/word-counter/)
+Use cases using data pipelines:
 
-## Operator Examples
+* [bank-processing](/use-cases/bank-processing/)
+* [http-callout](//use-cases/http-callout/)
+* [word-counter](//use-cases/word-counter/)
 
-* [map](/operators/map/)
-* [filter](/operators/filter/)
-* [filter-map](/operators/filter-map/)
-* [flat-map](/operators/flat-map/)
-* [update-state](/operators/update-state/)
+## Functions
+
+Simple functionality centric examples.
+
+* [map](/functions/map/)
+* [filter](/functions/filter/)
+* [filter-map](/functions/filter-map/)
+* [flat-map](/functions/flat-map/)
+* [update-state](/functions/update-state/)
 
 
 ## References
