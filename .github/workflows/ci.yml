@@ -1,0 +1,59 @@
+name: CI
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  merge_group:
+  pull_request:
+
+jobs:
+    build-and-generate:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          example_path: [
+            "operators/filter",
+            "operators/filter-map",
+            "operators/flat-map",
+            "operators/map",
+            "operators/ref-state",
+            "operators/update-state",
+            "pipelines/bank-processing",
+            "pipelines/http-callout",
+            "pipelines/word-counter",
+          ]
+          ssdk-version: [ssdk-preview5, ssdk-preview6-dev]
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+  
+        - name: Install stable CLI and start Fluvio cluster
+          timeout-minutes: 10
+          run: |
+            curl -fsS https://hub.infinyon.cloud/install/install.sh | bash
+
+        - name: Setup fluvio bin path
+          run:  echo "~/.fluvio/bin" >> $GITHUB_PATH
+
+        - name: Setup fvm bin path
+          run:  echo "~/.fvm/bin" >> $GITHUB_PATH
+
+        - name: Install SSDK version
+          run: |
+            fvm install ${{ matrix.ssdk-version }}
+
+        - name: Run ssdk setup
+          run: |
+            ssdk setup
+        
+        - name: Run ssdk generate
+          working-directory: ./${{ matrix.example_path }}
+          run: |
+            ssdk generate
+        
+        - name: Run ssdk build
+          working-directory: ./${{ matrix.example_path }}
+          run: |
+            ssdk build
