@@ -1,9 +1,9 @@
-apiVersion: 0.2.0
+apiVersion: 0.3.0
 meta:
   name: filter-example
   version: 0.1.0
   namespace: examples
-  
+
 config:
   converter: raw
 
@@ -12,7 +12,7 @@ topics:
     schema:
       value:
         type: string
-  
+
   questions:
     schema:
       value:
@@ -20,9 +20,9 @@ topics:
 
 services:
   filter-service:
-    source:
-      type: topic
-      id: sentences
+    sources:
+      - type: topic
+        id: sentences
 
     transforms:
       steps:
@@ -31,7 +31,7 @@ services:
             fn filter_questions(input: String) -> Result<bool, String> {
               Ok(input.contains("?"))
             }
-          
-    sink:
-      type: topic
-      id: questions
+
+    sinks:
+      - type: topic
+        id: questions

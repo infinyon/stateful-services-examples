@@ -1,4 +1,4 @@
-apiVersion: 0.2.0
+apiVersion: 0.3.0
 meta:
   name: word-counter
   version: 0.1.0
@@ -15,7 +15,7 @@ config:
   #   - {position: Offset, value: 23}
   consumer:
     default_starting_offset:
-      value: 0 
+      value: 0
       position: End
 
 types:
@@ -55,9 +55,9 @@ topics:
 services:
   # Service definition the input and output topics, and the transformations.
   word-processing-window:
-    source:
-      type: topic
-      id: sentence
+    sources:
+      - type: topic
+        id: sentence
 
     transforms:
       window:
@@ -79,21 +79,21 @@ services:
           run: |
             fn split_sequence(sentence: String) -> Result<Vec<String>, String> {
               Ok(sentence.split_whitespace().map(String::from).collect())
-            }            
+            }
 
         # Instruct the engine to apply the timestamp from the event metadata for the watermark operator
         - operator: assign-timestamp
           run: |
             fn assign_event_timestamp(value: String, event_time: i64) -> Result<i64, String> {
               Ok(event_time)
-            }            
+            }
 
         # Assign a partition key to divide the data set for the update operation
         - operator: assign-key
           run: |
             fn assign_word_key(word: String) -> Result<String, String> {
               Ok(word.to_lowercase().chars().filter(|c| c.is_alphanumeric()).collect())
-            }            
+            }
 
         # Retrieve state by key and increment by 1.
         - operator: update-state
@@ -101,7 +101,7 @@ services:
             fn increment_word_count(word: String) -> Result<(), String> {
               count_per_word().increment(1);
               Ok(())
-              }            
+              }
 
       flush:
         # Read the full state and compute the top 3 words sorted by count.
@@ -113,8 +113,8 @@ services:
             top3.reverse();
             top3.truncate(3);
             Ok(top3.iter().map( | entry | WordCount { word: entry.key.clone(), count: entry.value }).collect())
-          }          
+          }
 
-    sink:
-      type: topic
-      id: most-used-words
+    sinks:
+      - type: topic
+        id: most-used-words

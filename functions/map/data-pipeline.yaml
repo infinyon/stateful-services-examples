@@ -1,9 +1,9 @@
-apiVersion: 0.2.0
+apiVersion: 0.3.0
 meta:
   name: map-example
   version: 0.1.0
   namespace: examples
-  
+
 config:
   converter: json
 
@@ -11,7 +11,7 @@ types:
   user:
     type: object
     properties:
-      name: 
+      name:
         type: string
       ssn:
         type: string
@@ -21,7 +21,7 @@ topics:
     schema:
       value:
         type: user
-  
+
   users-public:
     schema:
       value:
@@ -29,9 +29,9 @@ topics:
 
 services:
   map-service:
-    source:
-      type: topic
-      id: users
+    sources:
+      - type: topic
+        id: users
 
     transforms:
       steps:
@@ -42,7 +42,7 @@ services:
               u.ssn = u.ssn.replace(|c: char| c.is_digit(10), "*");
               Ok(u)
             }
-          
-    sink:
-      type: topic
-      id: users-public
+
+    sinks:
+      - type: topic
+        id: users-public

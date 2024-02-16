@@ -1,21 +1,21 @@
-apiVersion: 0.2.0
+apiVersion: 0.3.0
 meta:
   name: http-callout
   version: 0.1.0
   namespace: examples
-  
+
 config:
   converter: json
   consumer:
     default_starting_offset:
-      value: 0 
+      value: 0
       position: End
 
 types:
   car:
     type: object
     properties:
-      maker: 
+      maker:
         type: string
       model:
         type: string
@@ -23,7 +23,7 @@ types:
   maker:
     type: object
     properties:
-      maker: 
+      maker:
         type: string
       country:
         type: string
@@ -35,7 +35,7 @@ topics:
     schema:
       value:
         type: car
-  
+
   makers:
     schema:
       value:
@@ -43,9 +43,9 @@ topics:
 
 services:
   lookup-car-maker:
-    source:
-      type: topic
-      id: cars
+    sources:
+      - type: topic
+        id: cars
 
     transforms:
       steps:
@@ -67,8 +67,7 @@ services:
 
               Ok(m)
             }
-            
-    sink:
-      type: topic
-      id: makers
 
+    sinks:
+      - type: topic
+        id: makers

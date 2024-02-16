@@ -1,35 +1,34 @@
-apiVersion: 0.2.0
+apiVersion: 0.3.0
 meta:
   name: update-state-example
   version: 0.1.0
   namespace: examples
-  
+
 config:
   converter: json
 
 types:
-  temp: 
+  temp:
     type: object
     properties:
       id:
         type: i32
       sensor:
-          type: string
+        type: string
       temperature:
         type: f32
-  
+
 topics:
   temp-sensor:
     schema:
       value:
         type: temp
-  
+
 services:
   save-temperature:
-
-    source:
-      type: topic
-      id: temp-sensor
+    sources:
+      - type: topic
+        id: temp-sensor
 
     transforms:
       states:
@@ -44,7 +43,7 @@ services:
                 sensor:
                   type: string
                 temperature:
-                  type: f32 
+                  type: f32
 
       steps:
         - operator: assign-key

@@ -1,4 +1,4 @@
-apiVersion: 0.2.0
+apiVersion: 0.3.0
 meta:
   name: banking-app
   version: 0.1.0
@@ -8,7 +8,7 @@ config:
   converter: json
   consumer:
     default_starting_offset:
-      value: 0 
+      value: 0
       position: End
 
 types:
@@ -16,14 +16,14 @@ types:
   admin-event:
     type: object
     properties:
-      iban: 
+      iban:
         type: string
       timestamp:
         type: string
       operation:
         type: admin-operation
-  
-  admin-operation: 
+
+  admin-operation:
     type: enum
     oneOf:
       add-account:
@@ -36,7 +36,7 @@ types:
         type: float32
       currency:
         type: string
-      account: 
+      account:
         type: user-account
       bank:
         type: bank
@@ -45,14 +45,14 @@ types:
   business-event:
     type: object
     properties:
-      txid: 
+      txid:
         type: string
       timestamp:
         type: string
       operation:
         type: business-operation
 
-  business-operation: 
+  business-operation:
     type: enum
     oneOf:
       deposit:
@@ -71,7 +71,7 @@ types:
         type: string
       iban:
         type: string
-      account: 
+      account:
         type: user-account
       bank:
         type: bank
@@ -85,7 +85,7 @@ types:
         type: float32
       currency:
         type: string
-      sender: 
+      sender:
         type: business-account
       beneficiary:
         type: business-account
@@ -94,7 +94,7 @@ types:
   data-event:
     type: object
     properties:
-      iban: 
+      iban:
         type: string
       name:
         type: string
@@ -103,7 +103,7 @@ types:
       operation:
         type: data-operation
 
-  data-operation: 
+  data-operation:
     type: enum
     oneOf:
       credit-account:
@@ -122,7 +122,7 @@ types:
       bank:
         type: bank
 
-  user-account: 
+  user-account:
     type: object
     properties:
       name:
@@ -139,17 +139,16 @@ types:
   bank:
     type: object
     properties:
-      swift: 
+      swift:
         type: string
       name:
         type: string
-  
+
   atm:
     type: object
     properties:
       id:
         type: string
-  
 
 topics:
   admin-events:
@@ -171,19 +170,18 @@ topics:
     schema:
       value:
         type: data-event
-  
+
   credit-events:
     schema:
       value:
         type: data-event
 
 services:
-
   # Convert Add Account admin events to Credit data events
   admin-service:
-    source:
-      type: topic
-      id: admin-events
+    sources:
+      - type: topic
+        id: admin-events
 
     transforms:
       steps:
@@ -206,17 +204,17 @@ services:
                 }
                 _ => Err("Unexpected admin event".to_string())
               }           
-            }    
- 
-    sink:
-      type: topic
-      id: data-events
+            }
+
+    sinks:
+      - type: topic
+        id: data-events
 
   # Convert Withdrawal business events to Debit data events
   withdrawal-service:
-    source:
-      type: topic
-      id: business-events
+    sources:
+      - type: topic
+        id: business-events
 
     transforms:
       steps:
@@ -240,15 +238,15 @@ services:
                 _ => Ok(None)
               }
             }
-    sink:
-      type: topic
-      id: data-events
+    sinks:
+      - type: topic
+        id: data-events
 
   # Convert Deposit business events to Credit data events
   deposit-service:
-    source:
-      type: topic
-      id: business-events
+    sources:
+      - type: topic
+        id: business-events
 
     transforms:
       steps:
@@ -280,17 +278,17 @@ services:
                 }
                 _ => Err("Unexpected credit event".to_string())
               }           
-            }    
- 
-    sink:
-      type: topic
-      id: data-events
+            }
+
+    sinks:
+      - type: topic
+        id: data-events
 
   # Convert Transfer business events to Credit & Debit data events
   transfer-service:
-    source:
-      type: topic
-      id: business-events
+    sources:
+      - type: topic
+        id: business-events
 
     transforms:
       steps:
@@ -332,16 +330,16 @@ services:
                 }
                 _ => Err("Unexpected operation".to_string())
               }           
-            }    
-    sink:
-      type: topic
-      id: data-events
+            }
+    sinks:
+      - type: topic
+        id: data-events
 
-  # Save the balance for each account in account-balance state object 
+  # Save the balance for each account in account-balance state object
   balance-manager:
-    source:
-      type: topic
-      id: data-events
+    sources:
+      - type: topic
+        id: data-events
 
     transforms:
       states:
@@ -387,9 +385,9 @@ services:
 
   # Copy Debit events to debit-events topic
   get-debit-events:
-    source:
-      type: topic
-      id: data-events
+    sources:
+      - type: topic
+        id: data-events
 
     transforms:
       steps:
@@ -402,15 +400,15 @@ services:
               }
             }
 
-    sink:
-      type: topic
-      id: debit-events    
-      
+    sinks:
+      - type: topic
+        id: debit-events
+
   # Copy Credit events to credit-events topic
   get-credit-events:
-    source:
-      type: topic
-      id: data-events
+    sources:
+      - type: topic
+        id: data-events
 
     transforms:
       steps:
@@ -423,6 +421,6 @@ services:
               }
             }
 
-    sink:
-      type: topic
-      id: credit-events   
+    sinks:
+      - type: topic
+        id: credit-events

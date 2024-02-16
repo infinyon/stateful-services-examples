@@ -1,4 +1,4 @@
-apiVersion: 0.2.0
+apiVersion: 0.3.0
 meta:
   name: probe-word-counter
   version: 0.1.0
@@ -24,9 +24,9 @@ topics:
 
 services:
   word-count-processing:
-    source:
-      type: topic
-      id: sentences
+    sources:
+      - type: topic
+        id: sentences
 
     transforms:
       states:
@@ -64,9 +64,9 @@ services:
             }
 
   look-up-word:
-    source:
-      type: topic
-      id: probe-words
+    sources:
+      - type: topic
+        id: probe-words
 
     transforms:
       states:
@@ -95,6 +95,6 @@ services:
                 }
             }
 
-    sink:
-      type: topic
-      id: word-counts
+    sinks:
+      - type: topic
+        id: word-counts
