@@ -269,13 +269,28 @@ services:
         steps:
           - operator: filter-map
             run: |
-              fn long_sentence_to_uppercase(ev: DataEvent) -> Result<Option<String>, String> {
+              fn long_sentence_to_uppercase(ev: DataEvent) -> Result<Option<OverdraftEvent>, String> {
                 let accounts = account_balance();
+                let mut new_balance = 0;
 
-                /* look-up account balance by IBAN */
-                /* If new balance is negative, generate an event */
+                let Some(ac) = accounts.iter().find(|&&a| a.name == ev.name) {
+                  let withdrawal = ev.operation.amount;
+                  new_balance = ac.balance - ev.operation.amount;
+                }
 
-                Ok(Some(input))
+                if new_balance < 0 {
+                  Ok(Some(
+                    OverdraftEvent {
+                      iban: ev.iban,
+                      name: ev.name,
+                      timestamp: event.timestamp,
+                      withdrawal: withdrawal,
+                      balance = new_balance,
+                    }
+                  ))
+                } else {
+                  Ok(None)
+                }
               }
 
   # Convert Deposit business events to Credit data events
