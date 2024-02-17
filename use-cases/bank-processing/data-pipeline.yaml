@@ -269,7 +269,7 @@ services:
         steps:
           - operator: filter-map
             run: |
-              fn long_sentence_to_uppercase(ev: DataEvent) -> Result<Option<OverdraftEvent>, String> {
+              fn generate_overdraft_event(ev: DataEvent) -> Result<Option<OverdraftEvent>, String> {
                 let accounts = account_balance();
                 let mut new_balance = 0;
 
