@@ -101,7 +101,7 @@ types:
       timestamp:
         type: string
       operation:
-        type: data-operation
+        type: data-operation      
 
   data-operation:
     type: enum
@@ -109,6 +109,21 @@ types:
       credit-account:
         type: amount
       debit-account:
+        type: amount
+
+  #  Schema for overdraft events:
+  overdraft-event:
+    type: object
+    properties:
+      iban:
+        type: string
+      name:
+        type: string
+      timestamp:
+        type: string
+      withdrawal:
+        type: amount
+      balance: 
         type: amount
 
   # Schema for shared objects
@@ -176,6 +191,11 @@ topics:
       value:
         type: data-event
 
+  overdraft-events:
+    schema:
+      value:
+        type: overdraft-event
+
 services:
   # Convert Add Account admin events to Credit data events
   admin-service:
@@ -216,6 +236,9 @@ services:
       - type: topic
         id: business-events
 
+    states:
+      - from: balance-manager.account-balance
+
     transforms:
       steps:
         - operator: filter-map
@@ -241,6 +264,19 @@ services:
     sinks:
       - type: topic
         id: data-events
+      - type: topic
+        id: overdraft-events
+        steps:
+          - operator: filter-map
+            run: |
+              fn long_sentence_to_uppercase(ev: DataEvent) -> Result<Option<String>, String> {
+                let accounts = account_balance();
+
+                /* look-up account balance by IBAN */
+                /* If new balance is negative, generate an event */
+
+                Ok(Some(input))
+              }
 
   # Convert Deposit business events to Credit data events
   deposit-service:
