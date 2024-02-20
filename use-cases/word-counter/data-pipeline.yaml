@@ -58,20 +58,19 @@ services:
     sources:
       - type: topic
         id: sentence
+    states:
+      - name: count-per-word
+        type: keyed-state
+        properties:
+          key:
+            type: string
+          value:
+            type: u32
 
     transforms:
       window:
         tumbling:
           duration: 20s
-
-      states:
-        - name: count-per-word
-          type: keyed-state
-          properties:
-            key:
-              type: string
-            value:
-              type: u32
 
       steps:
         # Split the sentence into words

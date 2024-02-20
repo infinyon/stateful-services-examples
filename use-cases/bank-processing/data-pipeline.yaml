@@ -101,7 +101,7 @@ types:
       timestamp:
         type: string
       operation:
-        type: data-operation      
+        type: data-operation
 
   data-operation:
     type: enum
@@ -123,7 +123,7 @@ types:
         type: string
       withdrawal:
         type: amount
-      balance: 
+      balance:
         type: amount
 
   # Schema for shared objects
@@ -271,21 +271,22 @@ services:
             run: |
               fn generate_overdraft_event(ev: DataEvent) -> Result<Option<OverdraftEvent>, String> {
                 let accounts = account_balance();
-                let mut new_balance = 0;
 
-                let Some(ac) = accounts.iter().find(|&&a| a.name == ev.name) {
-                  let withdrawal = ev.operation.amount;
-                  new_balance = ac.balance - ev.operation.amount;
-                }
+                let Some(ac) = accounts.iter().find(|&&a| a.name == ev.name) else {
+                  return Ok(None);
+                };
+                let withdrawal = ev.operation.amount;
+                let new_balance = ac.balance - ev.operation.amount;
+                
 
                 if new_balance < 0 {
                   Ok(Some(
                     OverdraftEvent {
                       iban: ev.iban,
                       name: ev.name,
-                      timestamp: event.timestamp,
+                      timestamp: ev.timestamp,
                       withdrawal: withdrawal,
-                      balance = new_balance,
+                      balance: new_balance,
                     }
                   ))
                 } else {
@@ -391,22 +392,21 @@ services:
     sources:
       - type: topic
         id: data-events
+    states:
+      - name: account-balance
+        type: keyed-state
+        properties:
+          key:
+            type: string
+          value:
+            type: arrow-row
+            properties:
+              balance:
+                type: float32
+              name:
+                type: string
 
     transforms:
-      states:
-        - name: account-balance
-          type: keyed-state
-          properties:
-            key:
-              type: string
-            value:
-              type: arrow-row
-              properties:
-                balance:
-                  type: float32
-                name:
-                  type: string
-
       steps:
         - operator: assign-key
           run: |

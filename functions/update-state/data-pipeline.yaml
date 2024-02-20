@@ -29,22 +29,21 @@ services:
     sources:
       - type: topic
         id: temp-sensor
+    states:
+      - name: temperature
+        type: keyed-state
+        properties:
+          key:
+            type: string
+          value:
+            type: arrow-row
+            properties:
+              sensor:
+                type: string
+              temperature:
+                type: f32
 
     transforms:
-      states:
-        - name: temperature
-          type: keyed-state
-          properties:
-            key:
-              type: string
-            value:
-              type: arrow-row
-              properties:
-                sensor:
-                  type: string
-                temperature:
-                  type: f32
-
       steps:
         - operator: assign-key
           run: |

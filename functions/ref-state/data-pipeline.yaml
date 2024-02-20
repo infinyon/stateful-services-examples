@@ -27,20 +27,19 @@ services:
     sources:
       - type: topic
         id: sentences
+    states:
+      - name: count-per-word
+        type: keyed-state
+        properties:
+          key:
+            type: string
+          value:
+            type: arrow-row
+            properties:
+              count:
+                type: i32
 
     transforms:
-      states:
-        - name: count-per-word
-          type: keyed-state
-          properties:
-            key:
-              type: string
-            value:
-              type: arrow-row
-              properties:
-                count:
-                  type: i32
-
       steps:
         - operator: flat-map
           run: |
@@ -67,12 +66,11 @@ services:
     sources:
       - type: topic
         id: probe-words
+    states:
+      - name: count-per-word
+        from: word-count-processing.count-per-word
 
     transforms:
-      states:
-        - name: count-per-word
-          from: word-count-processing.count-per-word
-
       steps:
         - operator: map
           run: |
