@@ -23,6 +23,7 @@ jobs:
             "use-cases/bank-processing",
             "use-cases/http-callout",
             "use-cases/word-counter",
+            "use-cases/openai-callout",
           ]
           ssdk-version: [ssdk-preview6]
       steps:
