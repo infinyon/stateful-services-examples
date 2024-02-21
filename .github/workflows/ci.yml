@@ -24,7 +24,7 @@ jobs:
             "use-cases/http-callout",
             "use-cases/word-counter",
           ]
-          ssdk-version: [ssdk-preview7-dev]
+          ssdk-version: [ssdk-preview6, ssdk-preview7-dev]
       steps:
         - name: Checkout
           uses: actions/checkout@v3
