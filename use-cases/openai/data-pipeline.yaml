@@ -1,4 +1,4 @@
-apiVersion: 0.2.0
+apiVersion: 0.3.0
 meta:
   name: openai-example
   version: 0.1.0
@@ -69,18 +69,19 @@ topics:
 
 services:
   openai-service:
-    source:
-      type: topic
-      id: sentence
+    sources:
+      - type: topic
+        id: sentence
+    states:
+      - name: count-per-model
+        type: keyed-state
+        properties:
+          key:
+            type: string
+          value:
+            type: u32
+
     transforms:
-      states:
-        - name: count-per-model
-          type: keyed-state
-          properties:
-            key:
-              type: string
-            value:
-              type: u32
       steps:
         - operator: map
           run: |
@@ -208,6 +209,6 @@ services:
               
               
             }
-    sink:
-      type: topic
-      id: output
+    sinks:
+      - type: topic
+        id: output
