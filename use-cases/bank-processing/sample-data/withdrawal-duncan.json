@@ -3,7 +3,7 @@
   "timestamp": "2023-11-02T12:50:00",
   "operation": {
     "Withdrawal": {
-      "amount": 550,
+      "amount": 780,
       "currency": "USD",
       "iban": "GB56DVTE70858022060682",
       "account": {

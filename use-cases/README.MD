@@ -2,5 +2,5 @@
 
 * [bank-processing](./bank-processing/)
 * [http-callout](./http-callout/)
+* [openai-callout](./openai-callout/)
 * [word-counter](./word-counter/)
-* [openapi](./openapi/)
