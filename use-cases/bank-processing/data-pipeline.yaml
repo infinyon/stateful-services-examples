@@ -236,9 +236,6 @@ services:
       - type: topic
         id: business-events
 
-    states:
-      - from: balance-manager.account-balance
-
     transforms:
       steps:
         - operator: filter-map
@@ -264,48 +261,6 @@ services:
     sinks:
       - type: topic
         id: data-events
-      - type: topic
-        id: overdraft-events
-        steps:
-          - operator: filter-map
-            run: |
-              fn generate_overdraft_event(ev: DataEvent) -> Result<Option<OverdraftEvent>, String> {
-                use polars::prelude::{col,lit,IntoLazy};
-
-                let accounts = account_balance();
-                let Ok(account) = accounts
-                    .clone()
-                    .lazy()
-                    .filter(col("name").eq(lit(ev.name.clone())))
-                    .collect() else {
-                  return Ok(None)  
-                };
-
-                let account_baleance = account.column("balance").map_err(|err | err.to_string())?.f32().map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?;
-                let withdrawal = match ev.operation {
-                  DataOperation::CreditAccount(_) => return Err("Unexpected credit event".into()),
-                  DataOperation::DebitAccount(debit) => debit,
-                }; 
-                let new_balance = account_baleance - withdrawal.amount;
-                
-
-                if new_balance < 0.0 {
-                  Ok(Some(
-                    OverdraftEvent {
-                      iban: ev.iban,
-                      name: ev.name,
-                      timestamp: ev.timestamp,
-                      withdrawal: withdrawal.clone(),
-                      balance: Amount {
-                        amount: new_balance,
-                        currency: withdrawal.currency
-                      },
-                    }
-                  ))
-                } else {
-                  Ok(None)
-                }
-              }
 
   # Convert Deposit business events to Credit data events
   deposit-service:
@@ -453,6 +408,9 @@ services:
       - type: topic
         id: data-events
 
+    states:
+      - from: balance-manager.account-balance
+
     transforms:
       steps:
         - operator: filter
@@ -467,6 +425,48 @@ services:
     sinks:
       - type: topic
         id: debit-events
+      - type: topic
+        id: overdraft-events
+        steps:
+          - operator: filter-map
+            run: |
+              fn generate_overdraft_event(ev: DataEvent) -> Result<Option<OverdraftEvent>, String> {
+                use polars::prelude::{col,lit,IntoLazy};
+
+                let accounts = account_balance();
+                let Ok(account) = accounts
+                    .clone()
+                    .lazy()
+                    .filter(col("name").eq(lit(ev.name.clone())))
+                    .collect() else {
+                  return Ok(None)  
+                };
+
+                let account_balance = account.column("balance").map_err(|err | err.to_string())?.f32().map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?;
+                let withdrawal = match ev.operation {
+                  DataOperation::CreditAccount(_) => return Err("Unexpected credit event".into()),
+                  DataOperation::DebitAccount(debit) => debit,
+                }; 
+                let new_balance = account_balance - withdrawal.amount;
+                
+                if new_balance < 0.0 {
+                  Ok(Some(
+                    OverdraftEvent {
+                      iban: ev.iban,
+                      name: ev.name,
+                      timestamp: ev.timestamp,
+                      withdrawal: withdrawal.clone(),
+                      balance: Amount {
+                        amount: new_balance,
+                        currency: withdrawal.currency
+                      },
+                    }
+                  ))
+                } else {
+                  Ok(None)
+                }
+              }
+
 
   # Copy Credit events to credit-events topic
   get-credit-events:
