@@ -195,6 +195,12 @@ services:
           duration: 30s
 
       steps:
+        - operator: assign-timestamp
+          run: |
+            fn assign_event_timestamp(cl: CarLocation, event_time: i64) -> Result<i64, String> {
+              Ok(event_time)
+            }
+
         - operator: assign-key
           run: |
             fn key_by_color(cl: CarLocation) -> Result<String, String> {
@@ -213,7 +219,7 @@ services:
         run: |
           fn compute_most_used_words() -> Result<CarColors, String> {
             let mut cc = count_by_color().clone();
-            Ok(cc.iter().map(| entry | Color { color: entry.key.clone(), count: entry.value }).collect())
+            Ok(cc.iter().map( | entry | Color { color: entry.key.clone(), count: entry.value }).collect())
           }
 
     sinks:

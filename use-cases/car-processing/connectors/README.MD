@@ -19,7 +19,7 @@ cdk deploy start --ipkg infinyon-http-source-0.3.3.ipkg -c car-connector.yaml
 ### 3. Checkout  car events
 
 ```bash
-fluvio consume car-events
+fluvio consume cars
 ```
 
 ### 4. Stop the connector
