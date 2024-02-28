@@ -10,4 +10,3 @@ Car count data pipeline uses the http-source conector to stream synthetic data f
 * Detect Annomaly - if 2 cars of different types have the same license plate per location (window processing - per minute)
 * Filter out German cars (filter operation)
 * Divide the events into 2 streams Saratoga, Sunnyvale (split operation)
-

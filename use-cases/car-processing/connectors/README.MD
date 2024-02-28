@@ -7,13 +7,13 @@ The connector configuration file is located at [car-connector.yaml](car-connecto
 ### 1. Download HTTP Source Connector
 
 ```bash
-cdk hub download infinyon/http-source@0.3.2
+cdk hub download infinyon/http-source@0.3.3
 ```
 
 ### 2. Start the connector
 
 ```bash
-cdk deploy start --ipkg infinyon-http-source-0.3.2.ipkg -c car-connector.yaml
+cdk deploy start --ipkg infinyon-http-source-0.3.3.ipkg -c car-connector.yaml
 ```
 
 ### 3. Checkout  car events
