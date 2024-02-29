@@ -19,7 +19,7 @@ fluvio hub smartmodule download infinyon/jolt@0.3.0
 ### 3. Start the connector
 
 ```bash
-cdk deploy start --ipkg infinyon-http-source-0.3.2.ipkg -c sentence-connector.yaml
+cdk deploy start --ipkg infinyon-http-source-0.3.3.ipkg -c sentence-connector.yaml
 ```
 
 ### 4. Stop the connector

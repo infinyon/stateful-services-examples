@@ -29,7 +29,7 @@ The following configuration reads a `quote` periodically (every two seconds):
 # quotes-periodic.yaml
 apiVersion: 0.2.0
 meta:
-  version: 0.3.2
+  version: 0.3.3
   name: quotes-periodic
   type: http-source
   topic: quotes
@@ -41,7 +41,7 @@ http:
 Copy the configuration to a file and star the connector on your local machine:
 
 ```bash
-cdk deploy start --ipkg infinyon-http-source-0.3.2.ipkg -c quotes-periodic.yaml
+cdk deploy start --ipkg infinyon-http-source-0.3.3.ipkg -c quotes-periodic.yaml
 ```
 
 Checkout the result:
@@ -64,7 +64,7 @@ The following configuration streams from the `quote-stream` endpoint, which is p
 # quotes-stream.yaml
 apiVersion: 0.2.0
 meta:
-  version: 0.3.2
+  version: 0.3.3
   name: quotes-stream
   type: http-source
   topic: quotes
@@ -78,7 +78,7 @@ http:
 Copy the configuration to a file and star the connector on your local machine:
 
 ```bash
-cdk deploy start --ipkg infinyon-http-source-0.3.2.ipkg -c quotes-stream.yaml
+cdk deploy start --ipkg infinyon-http-source-0.3.3.ipkg -c quotes-stream.yaml
 ```
 
 Checkout the result:
