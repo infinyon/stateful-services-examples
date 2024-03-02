@@ -297,16 +297,4 @@ services:
               lp.model = license.model;
               lp.update();
               Ok(())
-            }     
-
-      flush:
-        operator: aggregate
-        run: |
-          fn compute_most_used_words() -> Result<CarColors, String> {
-            let mut cc = count_by_color().clone();
-            Ok(cc.iter().map( | entry | Color { color: entry.key.clone(), count: entry.value }).collect())
-          }
-
-    sinks:
-      - type: topic
-        id: car-colors
+            } 
