@@ -60,7 +60,7 @@ types:
       type: color
   license:
     type: object
-    items:
+    properties:
       maker:
         type: string
       model:
@@ -107,6 +107,9 @@ topics:
       value:
         type: car-colors
   licenses:
+    default_starting_offset:
+      value: 0
+      position: Begining
     schema:
       value: 
         type: licenses
@@ -280,7 +283,7 @@ services:
         - operator: flat-map
           run: |
             fn split_licenses(licenses: Licenses) -> Result<Vec<License>, String> {
-              Ok(licenses.iter().collect())
+              Ok(licenses)
             }
 
         - operator: assign-key

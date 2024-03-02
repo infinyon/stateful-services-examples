@@ -9,7 +9,7 @@ meta:
     meta:
       name: cars 
 http:
-  endpoint: https://demo-data.infinyon.com/api/stream-car
+  endpoint: https://demo-data.infinyon.com/api/stream-car-mismatch-license
   method: GET
   stream: true
   delimiter: "\n\n"
