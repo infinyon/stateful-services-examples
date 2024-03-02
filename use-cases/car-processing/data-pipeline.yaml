@@ -203,7 +203,7 @@ services:
                 Ok(cl.location == "Sunnyvale")
               }
 
-  # Find speeding cars
+  # Count cars by color
   count-by-color: 
     sources:
       - type: topic
