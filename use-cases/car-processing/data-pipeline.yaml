@@ -58,6 +58,28 @@ types:
     type: list
     items:
       type: color
+  license:
+    type: object
+    items:
+      maker:
+        type: string
+      model:
+        type: string
+      license:
+        type: string           
+  licenses:
+    type: list
+    items:
+      type: license
+  stolen-plate:
+    type: object 
+    properties:
+      license:
+        type: string
+      first-car:
+        type: string
+      second-car:
+        type: string
 
 topics:
   cars:
@@ -84,7 +106,14 @@ topics:
     schema:
       value:
         type: car-colors
-
+  licenses:
+    schema:
+      value: 
+        type: licenses
+  stolen-plate:
+    schema:
+      value:
+        type: stolen-plate
   
 
 services:
@@ -211,6 +240,62 @@ services:
           run: |
             fn increment_color_count(cl: CarLocation) -> Result<(), String> {
               count_by_color().increment(1);
+              Ok(())
+            }     
+
+      flush:
+        operator: aggregate
+        run: |
+          fn compute_most_used_words() -> Result<CarColors, String> {
+            let mut cc = count_by_color().clone();
+            Ok(cc.iter().map( | entry | Color { color: entry.key.clone(), count: entry.value }).collect())
+          }
+
+    sinks:
+      - type: topic
+        id: car-colors
+
+  # Save license plates
+  save-license-plates: 
+    sources:
+      - type: topic
+        id: licenses
+
+    states:
+      - name: licence-plates
+        type: keyed-state
+        properties:
+          key:
+            type: string
+          value:
+            type: arrow-row
+            properties:
+              maker:
+                type: string
+              model:
+                type: string
+
+    transforms:
+      steps:
+        - operator: flat-map
+          run: |
+            fn split_licenses(licenses: Licenses) -> Result<Vec<License>, String> {
+              Ok(licenses.iter().collect())
+            }
+
+        - operator: assign-key
+          run: |
+            fn get_license_plate(license: License) -> Result<String, String> {
+              Ok(license.license)
+            }
+
+        - operator: update-state
+          run: |
+            fn add_license_plate(license: License) -> Result<(), String> {
+              let mut lp = licence_plates();
+              lp.maker = license.maker;
+              lp.model = license.model;
+              lp.update();
               Ok(())
             }     
 

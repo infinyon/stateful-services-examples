@@ -9,7 +9,7 @@ meta:
     meta:
       name: sentence 
 http:
-  endpoint: https://demo-data.infinyon.com/api/quote-stream
+  endpoint: https://demo-data.infinyon.com/api/stream-quote
   method: GET
   stream: true
   delimiter: "\n\n"

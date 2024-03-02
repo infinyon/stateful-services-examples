@@ -58,7 +58,7 @@ cdk deploy shutdown --name quotes-periodic
 
 ### Start HTTP-Source Streaming Connector
 
-The following configuration streams from the `quote-stream` endpoint, which is pre-configured to generate 2 quotes per second.
+The following configuration streams from the `stream-quote` endpoint, which is pre-configured to generate 2 quotes per second.
 
 ```yaml
 # quotes-stream.yaml
@@ -69,7 +69,7 @@ meta:
   type: http-source
   topic: quotes
 http:
-  endpoint: https://demo-data.infinyon.com/api/quote-stream
+  endpoint: https://demo-data.infinyon.com/api/stream-quote
   method: GET
   stream: true
   delimiter: "\n\n"
