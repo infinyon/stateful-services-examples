@@ -109,7 +109,7 @@ topics:
   licenses:
     default_starting_offset:
       value: 0
-      position: Begining
+      position: Beginning
     schema:
       value: 
         type: licenses
