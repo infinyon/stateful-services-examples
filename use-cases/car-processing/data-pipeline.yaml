@@ -108,12 +108,12 @@ topics:
         type: car-colors
   licenses:
     default_starting_offset:
-      value: 0
+      value: 0ex
       position: Beginning
     schema:
       value: 
         type: licenses
-  stolen-plate:
+  stolen-plates:
     schema:
       value:
         type: stolen-plate
@@ -301,3 +301,42 @@ services:
               lp.update();
               Ok(())
             } 
+
+  # Check license plates
+  check-license-plates: 
+    sources:
+      - type: topic
+        id: cars
+
+    states:
+      - name: licence-plates
+        from: save-license-plates.licence-plates
+
+    transforms:
+      steps:
+        - operator: filter-map
+          run: |
+            fn check_license_plate(car: Car) -> Result<Option<StolenPlate>, String> {
+              use polars::prelude::{col,lit,IntoLazy};
+
+              let plates = licence_plates();
+              let Ok(plate) = plates
+                  .clone()
+                  .lazy()
+                  .filter(col("Key").eq(lit(car.license.clone())))
+                  .collect() else {
+                return Ok(None)  
+              };
+
+              Ok(Some(StolenPlate {
+                license: car.license.clone(),
+                first_car: format!("{} {}", car.maker.clone(), car.model.clone()),
+                second_car: format!("{} {}", 
+                  plate.column("maker").map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?.str(), 
+                  plate.column("model").map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?.str()),
+              }))
+            }
+
+    sinks:
+      - type: topic
+        id: stolen-plates
