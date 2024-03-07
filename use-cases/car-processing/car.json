@@ -1,0 +1,9 @@
+{
+    "maker": "Toyota",
+    "model": "Corolla",
+    "license": "ABC123",
+    "color": "blue",
+    "location": "Seattle",
+    "mph": 55,
+    "timestamp": "2018-01-01T12:00:00Z"
+}

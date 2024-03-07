@@ -48,9 +48,9 @@ types:
       location:
         type: string
   color:
-    type: object 
+    type: object
     properties:
-      color: 
+      color:
         type: string
       count:
         type: u32
@@ -66,13 +66,13 @@ types:
       model:
         type: string
       license:
-        type: string           
+        type: string
   licenses:
     type: list
     items:
       type: license
   stolen-plate:
-    type: object 
+    type: object
     properties:
       license:
         type: string
@@ -111,16 +111,14 @@ topics:
       value: 0ex
       position: Beginning
     schema:
-      value: 
+      value:
         type: licenses
   stolen-plates:
     schema:
       value:
         type: stolen-plate
-  
 
 services:
-
   # Call to an HTTP server to identify a car maker
   lookup-maker:
     sources:
@@ -150,9 +148,8 @@ services:
       - type: topic
         id: makers
 
-
   # Find speeding cars
-  speeding-cars: 
+  speeding-cars:
     sources:
       - type: topic
         id: cars
@@ -168,7 +165,6 @@ services:
     sinks:
       - type: topic
         id: speeding
-
 
   # Split cars into 2 streams based on location
   divide-by-location:
@@ -207,7 +203,7 @@ services:
               }
 
   # Count cars by color
-  count-by-color: 
+  count-by-color:
     sources:
       - type: topic
         id: sunnyvale
@@ -244,7 +240,7 @@ services:
             fn increment_color_count(cl: CarLocation) -> Result<(), String> {
               count_by_color().increment(1);
               Ok(())
-            }     
+            }
 
       flush:
         operator: aggregate
@@ -259,7 +255,7 @@ services:
         id: car-colors
 
   # Save license plates
-  save-license-plates: 
+  save-license-plates:
     sources:
       - type: topic
         id: licenses
@@ -300,10 +296,10 @@ services:
               lp.model = license.model;
               lp.update();
               Ok(())
-            } 
+            }
 
   # Check license plates
-  check-license-plates: 
+  check-license-plates:
     sources:
       - type: topic
         id: cars
@@ -320,14 +316,26 @@ services:
               use polars::prelude::{col,lit,IntoLazy};
 
               let plates = licence_plates();
-              let Ok(plate) = plates
+
+              println!("{:?}", plates);
+              
+              let match_plates = plates
                   .clone()
                   .lazy()
-                  .filter(col("Key").eq(lit(car.license.clone())))
-                  .collect() else {
-                return Ok(None)  
-              };
+                  .filter(col("id").eq(lit(car.license.clone())))
+                  .collect()
+                  .map_err(|e| format!("Failed to lookup: {}", e))?;
 
+              println!("matched {:?}", match_plates);
+
+              if match_plates.is_empty() {
+                println!("No match: {}", car.license);
+                return Ok(None);
+              } else {
+                println!("Match: {}", car.license);
+              }
+
+              /*
               Ok(Some(StolenPlate {
                 license: car.license.clone(),
                 first_car: format!("{} {}", car.maker.clone(), car.model.clone()),
@@ -335,6 +343,8 @@ services:
                   plate.column("maker").map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?.str(), 
                   plate.column("model").map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?.str()),
               }))
+              */
+              Ok(None)
             }
 
     sinks:
