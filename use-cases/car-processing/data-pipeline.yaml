@@ -76,10 +76,6 @@ types:
     properties:
       license:
         type: string
-      first-car:
-        type: string
-      second-car:
-        type: string
 
 topics:
   cars:
@@ -317,7 +313,7 @@ services:
 
               let plates = licence_plates();
 
-              println!("{:?}", plates);
+              // println!("{:?}", plates);
               
               let match_plates = plates
                   .clone()
@@ -326,25 +322,19 @@ services:
                   .collect()
                   .map_err(|e| format!("Failed to lookup: {}", e))?;
 
-              println!("matched {:?}", match_plates);
+              //println!("matched {:?}", match_plates);
 
               if match_plates.is_empty() {
                 println!("No match: {}", car.license);
-                return Ok(None);
+                Ok(None)
               } else {
                 println!("Match: {}", car.license);
+                Ok(Some(StolenPlate {
+                  license: car.license.clone()
+                }))
               }
 
-              /*
-              Ok(Some(StolenPlate {
-                license: car.license.clone(),
-                first_car: format!("{} {}", car.maker.clone(), car.model.clone()),
-                second_car: format!("{} {}", 
-                  plate.column("maker").map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?.str(), 
-                  plate.column("model").map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?.str()),
-              }))
-              */
-              Ok(None)
+
             }
 
     sinks:
