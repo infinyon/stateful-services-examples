@@ -324,22 +324,20 @@ services:
         - operator: filter-map
           run: |
             fn check_license_plate(car: Car) -> Result<Option<StolenPlate>, String> {
-              use polars::prelude::{col,lit,IntoLazy};
-
               let plates = licence_plates();
               let plate = plates
                 .column("id")
                 .unwrap()
                 .str()
                 .expect("failed to get key - plate")
-                .get(i)
+                .get(0)
                 .unwrap() as Plate;
 
               if plate.maker != car.maker || plate.model != car.model {
                 Ok(Some(StolenPlate {
                   license: car.license.clone(),
                   first_car: format!("{} {}", car.maker.clone(), car.model.clone()),
-                  second_car: format!("{} {}", plate.maker.clone(), plate.model.clone()
+                  second_car: format!("{} {}", plate.maker.clone(), plate.model.clone())
                 }))
               } else {
                 Ok(None)
