@@ -58,13 +58,6 @@ types:
     type: list
     items:
       type: color
-  plate:
-    type: object
-    properties:
-      maker:
-        type: string
-      model:
-        type: string
   license:
     type: object
     properties:
@@ -83,9 +76,9 @@ types:
     properties:
       license:
         type: string
-      first-car:
+      owner:
         type: string
-      second-car:
+      violator:
         type: string
 
 topics:
@@ -120,7 +113,7 @@ topics:
     schema:
       value: 
         type: licenses
-  stolen-plates:
+  violations:
     schema:
       value:
         type: stolen-plate
@@ -324,27 +317,37 @@ services:
         - operator: filter-map
           run: |
             fn check_license_plate(car: Car) -> Result<Option<StolenPlate>, String> {
+              use polars::prelude::*;
+
               let plates = licence_plates();
               let plate = plates
-                .column("id")
-                .unwrap()
-                .str()
-                .expect("failed to get key - plate")
-                .get(0)
-                .unwrap() as Plate;
+                .clone().lazy().filter(
+                  col("id").eq(lit(car.license.clone()))
+                )
+                .collect().map_err(|e| e.to_string())?;
 
-              if plate.maker != car.maker || plate.model != car.model {
-                Ok(Some(StolenPlate {
-                  license: car.license.clone(),
-                  first_car: format!("{} {}", car.maker.clone(), car.model.clone()),
-                  second_car: format!("{} {}", plate.maker.clone(), plate.model.clone())
-                }))
-              } else {
-                Ok(None)
+              if !plate.is_empty() {
+                let maker = plate
+                  .column("maker").map_err(|e| e.to_string())?
+                  .str().map_err(|e| e.to_string())?
+                  .get(0).unwrap_or_default();
+                let model = plate
+                  .column("model").map_err(|e| e.to_string())?
+                  .str().map_err(|e| e.to_string())?
+                  .get(0).unwrap_or_default();
+
+                if maker != car.maker.as_str() || model != car.model.as_str() {
+                  return Ok(Some(StolenPlate {
+                    license: car.license.clone(),
+                    owner: format!("{} {}", &car.maker, &car.model),
+                    violator: format!("{} {}", maker, model)
+                  }));
+                }
               }
-              
+
+              Ok(None)
             }
 
     sinks:
       - type: topic
-        id: stolen-plates
+        id: violations
