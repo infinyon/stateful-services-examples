@@ -58,6 +58,13 @@ types:
     type: list
     items:
       type: color
+  plate:
+    type: object
+    properties:
+      maker:
+        type: string
+      model:
+        type: string
   license:
     type: object
     properties:
@@ -320,21 +327,24 @@ services:
               use polars::prelude::{col,lit,IntoLazy};
 
               let plates = licence_plates();
-              let Ok(plate) = plates
-                  .clone()
-                  .lazy()
-                  .filter(col("Key").eq(lit(car.license.clone())))
-                  .collect() else {
-                return Ok(None)  
-              };
+              let plate = plates
+                .column("id")
+                .unwrap()
+                .str()
+                .expect("failed to get key - plate")
+                .get(i)
+                .unwrap() as Plate;
 
-              Ok(Some(StolenPlate {
-                license: car.license.clone(),
-                first_car: format!("{} {}", car.maker.clone(), car.model.clone()),
-                second_car: format!("{} {}", 
-                  plate.column("maker").map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?.str(), 
-                  plate.column("model").map_err(|err | err.to_string())?.get(0).ok_or("Failed to get balance")?.str()),
-              }))
+              if plate.maker != car.maker || plate.model != car.model {
+                Ok(Some(StolenPlate {
+                  license: car.license.clone(),
+                  first_car: format!("{} {}", car.maker.clone(), car.model.clone()),
+                  second_car: format!("{} {}", plate.maker.clone(), plate.model.clone()
+                }))
+              } else {
+                Ok(None)
+              }
+              
             }
 
     sinks:
