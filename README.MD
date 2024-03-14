@@ -15,7 +15,7 @@ rustup update
 
 ```bash
 curl -fsS https://hub.infinyon.cloud/install/install.sh | bash
-fvm install ssdk-preview5
+fvm install ssdk-preview6
 ```
 
 #### Start a cluster
