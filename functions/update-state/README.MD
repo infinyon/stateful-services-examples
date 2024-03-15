@@ -2,12 +2,12 @@
 
 In this example, we use the `update-state` operator to collect the `temperature` values from multiple sensors into a table. The data pipeline uses `arrow-row` for the table representation.
 
-* Checkout the [data-pipeline.yaml](./data-pipeline.yaml).
+* Checkout the [dataflow.yaml](./dataflow.yaml).
 * Make sure to [Install SSDK and start a Fluvio cluster].
 
 ### 1. Run Data Pipeline
 
-With the `data-pipeline.yaml` file in the current directory, run the following commands:
+With the `dataflow.yaml` file in the current directory, run the following commands:
 
 ```bash
 ssdk generate

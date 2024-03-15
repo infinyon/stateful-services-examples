@@ -1,4 +1,4 @@
-apiVersion: 0.3.0
+apiVersion: 0.4.0
 meta:
   name: car-processing
   version: 0.1.0
@@ -48,9 +48,9 @@ types:
       location:
         type: string
   color:
-    type: object 
+    type: object
     properties:
-      color: 
+      color:
         type: string
       count:
         type: u32
@@ -66,13 +66,13 @@ types:
       model:
         type: string
       license:
-        type: string           
+        type: string
   licenses:
     type: list
     items:
       type: license
   stolen-plate:
-    type: object 
+    type: object
     properties:
       license:
         type: string
@@ -112,16 +112,14 @@ topics:
         value: 0
         position: Beginning
     schema:
-      value: 
+      value:
         type: licenses
   violations:
     schema:
       value:
         type: stolen-plate
-  
 
 services:
-
   # Call to an HTTP server to identify a car maker
   lookup-maker:
     sources:
@@ -129,47 +127,43 @@ services:
         id: cars
 
     transforms:
-      steps:
-        - operator: map
-          adaptors:
-            - http
-          run: |
-            fn get_car_maker(car: Car) -> Result<Maker, String> {
-              let maker = car.maker.replace(" ", "%20");
-              let url = format!("https://demo-data.infinyon.com/api/maker/{maker}");
-              let request = ssdk_http::http::Request::builder().uri(url).body("")
-                .map_err(|e| e.to_string())?;
+      - operator: map
+        adaptors:
+          - http
+        run: |
+          fn get_car_maker(car: Car) -> Result<Maker, String> {
+            let maker = car.maker.replace(" ", "%20");
+            let url = format!("https://demo-data.infinyon.com/api/maker/{maker}");
+            let request = ssdk_http::http::Request::builder().uri(url).body("")
+              .map_err(|e| e.to_string())?;
 
-              let response = ssdk_http::blocking::send(request).map_err(|e| e.to_string())?;
-              let body = response.into_body();
+            let response = ssdk_http::blocking::send(request).map_err(|e| e.to_string())?;
+            let body = response.into_body();
 
-              let m: Maker = serde_json::from_slice(&*body).map_err(|err| err.to_string())?;
-              Ok(m)
-            }
+            let m: Maker = serde_json::from_slice(&*body).map_err(|err| err.to_string())?;
+            Ok(m)
+          }
 
     sinks:
       - type: topic
         id: makers
 
-
   # Find speeding cars
-  speeding-cars: 
+  speeding-cars:
     sources:
       - type: topic
         id: cars
 
     transforms:
-      steps:
-        - operator: filter
-          run: |
-            fn is_speeding(car: Car) -> Result<bool, String> {
-              Ok(car.mph > 45)
-            }
+      - operator: filter
+        run: |
+          fn is_speeding(car: Car) -> Result<bool, String> {
+            Ok(car.mph > 45)
+          }
 
     sinks:
       - type: topic
         id: speeding
-
 
   # Split cars into 2 streams based on location
   divide-by-location:
@@ -178,16 +172,15 @@ services:
         id: cars
 
     transforms:
-      steps:
-        - operator: map
-          run: |
-            fn get_car_location(car: Car) -> Result<CarLocation, String> {
-              Ok(CarLocation {
-                car: format!("{} {}", car.maker, car.model),
-                color: car.color,
-                location: car.location,
-              })
-            }
+      - operator: map
+        run: |
+          fn get_car_location(car: Car) -> Result<CarLocation, String> {
+            Ok(CarLocation {
+              car: format!("{} {}", car.maker, car.model),
+              color: car.color,
+              location: car.location,
+            })
+          }
 
     sinks:
       - type: topic
@@ -208,7 +201,7 @@ services:
               }
 
   # Count cars by color
-  count-by-color: 
+  count-by-color:
     sources:
       - type: topic
         id: sunnyvale
@@ -222,33 +215,31 @@ services:
           value:
             type: u32
 
-    transforms:
-      window:
-        tumbling:
-          duration: 30s
+    window:
+      tumbling:
+        duration: 30s
 
-      steps:
-        - operator: assign-timestamp
-          run: |
-            fn assign_event_timestamp(cl: CarLocation, event_time: i64) -> Result<i64, String> {
-              Ok(event_time)
-            }
-
-        - operator: assign-key
+      assign-timestamp:
+        run: |
+          fn assign_event_timestamp(cl: CarLocation, event_time: i64) -> Result<i64, String> {
+            Ok(event_time)
+          }
+      partition:
+        assign-key:
           run: |
             fn key_by_color(cl: CarLocation) -> Result<String, String> {
               Ok(cl.color)
             }
 
-        - operator: update-state
-          run: |
-            fn increment_color_count(cl: CarLocation) -> Result<(), String> {
-              count_by_color().increment(1);
-              Ok(())
-            }     
+        transforms:
+          - operator: update-state
+            run: |
+              fn increment_color_count(cl: CarLocation) -> Result<(), String> {
+                count_by_color().increment(1);
+                Ok(())
+              }
 
       flush:
-        operator: aggregate
         run: |
           fn compute_most_used_words() -> Result<CarColors, String> {
             let mut cc = count_by_color().clone();
@@ -260,7 +251,7 @@ services:
         id: car-colors
 
   # Save license plates
-  save-license-plates: 
+  save-license-plates:
     sources:
       - type: topic
         id: licenses
@@ -280,19 +271,20 @@ services:
                 type: string
 
     transforms:
-      steps:
-        - operator: flat-map
-          run: |
-            fn split_licenses(licenses: Licenses) -> Result<Vec<License>, String> {
-              Ok(licenses)
-            }
+      - operator: flat-map
+        run: |
+          fn split_licenses(licenses: Licenses) -> Result<Vec<License>, String> {
+            Ok(licenses)
+          }
 
-        - operator: assign-key
-          run: |
-            fn get_license_plate(license: License) -> Result<String, String> {
-              Ok(license.license)
-            }
+    partition:
+      assign-key:
+        run: |
+          fn get_license_plate(license: License) -> Result<String, String> {
+            Ok(license.license)
+          }
 
+      transforms:
         - operator: update-state
           run: |
             fn add_license_plate(license: License) -> Result<(), String> {
@@ -301,10 +293,10 @@ services:
               lp.model = license.model;
               lp.update();
               Ok(())
-            } 
+            }
 
   # Check license plates
-  check-license-plates: 
+  check-license-plates:
     sources:
       - type: topic
         id: cars
@@ -314,39 +306,38 @@ services:
         from: save-license-plates.licence-plates
 
     transforms:
-      steps:
-        - operator: filter-map
-          run: |
-            fn check_license_plate(car: Car) -> Result<Option<StolenPlate>, String> {
-              use polars::prelude::*;
+      - operator: filter-map
+        run: |
+          fn check_license_plate(car: Car) -> Result<Option<StolenPlate>, String> {
+            use polars::prelude::*;
 
-              let plates = licence_plates();
-              let plate = plates
-                .clone().lazy().filter(col("id").eq(lit(car.license.clone())))
-                .collect().map_err(|e| e.to_string())?;
+            let plates = licence_plates();
+            let plate = plates
+              .clone().lazy().filter(col("id").eq(lit(car.license.clone())))
+              .collect().map_err(|e| e.to_string())?;
 
-              if !plate.is_empty() {
-                let maker = plate
-                  .column("maker").map_err(|e| e.to_string())?
-                  .str().map_err(|e| e.to_string())?
-                  .get(0).unwrap_or_default();
-                let model = plate
-                  .column("model").map_err(|e| e.to_string())?
-                  .str().map_err(|e| e.to_string())?
-                  .get(0).unwrap_or_default();
+            if !plate.is_empty() {
+              let maker = plate
+                .column("maker").map_err(|e| e.to_string())?
+                .str().map_err(|e| e.to_string())?
+                .get(0).unwrap_or_default();
+              let model = plate
+                .column("model").map_err(|e| e.to_string())?
+                .str().map_err(|e| e.to_string())?
+                .get(0).unwrap_or_default();
 
-                if (!maker.is_empty() && maker != car.maker.as_str()) || 
-                   (!model.is_empty() && model != car.model.as_str()) {
-                  return Ok(Some(StolenPlate {
-                    license: car.license.clone(),
-                    owner: format!("{} {}", &car.maker, &car.model),
-                    violator: format!("{} {}", maker, model)
-                  }));
-                }
+              if (!maker.is_empty() && maker != car.maker.as_str()) || 
+                 (!model.is_empty() && model != car.model.as_str()) {
+                return Ok(Some(StolenPlate {
+                  license: car.license.clone(),
+                  owner: format!("{} {}", &car.maker, &car.model),
+                  violator: format!("{} {}", maker, model)
+                }));
               }
-
-              Ok(None)
             }
+
+            Ok(None)
+          }
 
     sinks:
       - type: topic

@@ -1,4 +1,4 @@
-apiVersion: 0.3.0
+apiVersion: 0.4.0
 meta:
   name: map-example
   version: 0.1.0
@@ -34,14 +34,13 @@ services:
         id: users
 
     transforms:
-      steps:
-        - operator: map
-          run: |
-            fn mask_ssn(user: User) -> Result<User, String> {
-              let mut u = user.clone();
-              u.ssn = u.ssn.replace(|c: char| c.is_digit(10), "*");
-              Ok(u)
-            }
+      - operator: map
+        run: |
+          fn mask_ssn(user: User) -> Result<User, String> {
+            let mut u = user.clone();
+            u.ssn = u.ssn.replace(|c: char| c.is_digit(10), "*");
+            Ok(u)
+          }
 
     sinks:
       - type: topic

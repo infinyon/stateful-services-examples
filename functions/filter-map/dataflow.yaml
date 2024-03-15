@@ -1,4 +1,4 @@
-apiVersion: 0.3.0
+apiVersion: 0.4.0
 meta:
   name: filter-map-example
   version: 0.1.0
@@ -25,16 +25,15 @@ services:
         id: sentences
 
     transforms:
-      steps:
-        - operator: filter-map
-          run: |
-            fn long_sentence_to_uppercase(input: String) -> Result<Option<String>, String> {
-              if input.len() > 10 {
-                Ok(Some(input.to_uppercase()))
-              } else {
-                Ok(None)
-              }
+      - operator: filter-map
+        run: |
+          fn long_sentence_to_uppercase(input: String) -> Result<Option<String>, String> {
+            if input.len() > 10 {
+              Ok(Some(input.to_uppercase()))
+            } else {
+              Ok(None)
             }
+          }
 
     sinks:
       - type: topic

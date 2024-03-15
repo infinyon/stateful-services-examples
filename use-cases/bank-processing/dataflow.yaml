@@ -1,4 +1,4 @@
-apiVersion: 0.3.0
+apiVersion: 0.4.0
 meta:
   name: banking-app
   version: 0.1.0
@@ -204,27 +204,26 @@ services:
         id: admin-events
 
     transforms:
-      steps:
-        - operator: map
-          run: |
-            fn admin_create_credit_events(event: AdminEvent) -> Result<DataEvent, String> {
-              match event.operation {
-                AdminOperation::AddAccount(ev) => {
-                  let e = DataEvent {
-                    iban: event.iban,
-                    name: ev.account.name,
-                    timestamp: event.timestamp,
-                    operation: DataOperation::CreditAccount(
-                      Amount {
-                          amount: ev.amount,
-                          currency:ev.currency,
-                      })
-                  };
-                  Ok(e)
-                }
-                _ => Err("Unexpected admin event".to_string())
-              }           
-            }
+      - operator: map
+        run: |
+          fn admin_create_credit_events(event: AdminEvent) -> Result<DataEvent, String> {
+            match event.operation {
+              AdminOperation::AddAccount(ev) => {
+                let e = DataEvent {
+                  iban: event.iban,
+                  name: ev.account.name,
+                  timestamp: event.timestamp,
+                  operation: DataOperation::CreditAccount(
+                    Amount {
+                        amount: ev.amount,
+                        currency:ev.currency,
+                    })
+                };
+                Ok(e)
+              }
+              _ => Err("Unexpected admin event".to_string())
+            }           
+          }
 
     sinks:
       - type: topic
@@ -240,27 +239,26 @@ services:
       - from: balance-manager.account-balance
 
     transforms:
-      steps:
-        - operator: filter-map
-          run: |
-            fn create_debit_events(event: BusinessEvent) -> Result<Option<DataEvent>, String> {
-              match event.operation {
-                BusinessOperation::Withdrawal(ev) => {
-                  let e = DataEvent {
-                    iban: ev.iban,
-                    name: ev.account.name,
-                    timestamp: event.timestamp,
-                    operation: DataOperation::DebitAccount(
-                      Amount {
-                          amount: ev.amount,
-                          currency:ev.currency,
-                      })
-                  };
-                  Ok(Some(e))
-                },
-                _ => Ok(None)
-              }
+      - operator: filter-map
+        run: |
+          fn create_debit_events(event: BusinessEvent) -> Result<Option<DataEvent>, String> {
+            match event.operation {
+              BusinessOperation::Withdrawal(ev) => {
+                let e = DataEvent {
+                  iban: ev.iban,
+                  name: ev.account.name,
+                  timestamp: event.timestamp,
+                  operation: DataOperation::DebitAccount(
+                    Amount {
+                        amount: ev.amount,
+                        currency:ev.currency,
+                    })
+                };
+                Ok(Some(e))
+              },
+              _ => Ok(None)
             }
+          }
 
     sinks:
       - type: topic
@@ -316,36 +314,35 @@ services:
         id: business-events
 
     transforms:
-      steps:
-        - operator: filter
-          run: |
-            fn filter_credit_events(event: BusinessEvent) -> Result<bool, String> {
-              match event.operation {
-                BusinessOperation::Deposit(_) => Ok(true),
-                _ => Ok(false)
-              }
+      - operator: filter
+        run: |
+          fn filter_credit_events(event: BusinessEvent) -> Result<bool, String> {
+            match event.operation {
+              BusinessOperation::Deposit(_) => Ok(true),
+              _ => Ok(false)
             }
+          }
 
-        - operator: map
-          run: |
-            fn create_credit_events(event: BusinessEvent) -> Result<DataEvent, String> {
-              match event.operation {
-                BusinessOperation::Deposit(ev) => {
-                  let e = DataEvent {
-                    iban: ev.iban,
-                    name: ev.account.name,
-                    timestamp: event.timestamp,
-                    operation: DataOperation::CreditAccount(
-                      Amount {
-                          amount: ev.amount,
-                          currency:ev.currency,
-                      })
-                  };
-                  Ok(e)
-                }
-                _ => Err("Unexpected credit event".to_string())
-              }           
-            }
+      - operator: map
+        run: |
+          fn create_credit_events(event: BusinessEvent) -> Result<DataEvent, String> {
+            match event.operation {
+              BusinessOperation::Deposit(ev) => {
+                let e = DataEvent {
+                  iban: ev.iban,
+                  name: ev.account.name,
+                  timestamp: event.timestamp,
+                  operation: DataOperation::CreditAccount(
+                    Amount {
+                        amount: ev.amount,
+                        currency:ev.currency,
+                    })
+                };
+                Ok(e)
+              }
+              _ => Err("Unexpected credit event".to_string())
+            }           
+          }
 
     sinks:
       - type: topic
@@ -361,46 +358,45 @@ services:
       - from: balance-manager.account-balance
 
     transforms:
-      steps:
-        - operator: filter
-          run: |
-            fn filter_transfer_events(event: BusinessEvent) -> Result<bool, String> {
-              match event.operation {
-                BusinessOperation::Transfer(_) => Ok(true),
-                _ => Ok(false)
-              }
+      - operator: filter
+        run: |
+          fn filter_transfer_events(event: BusinessEvent) -> Result<bool, String> {
+            match event.operation {
+              BusinessOperation::Transfer(_) => Ok(true),
+              _ => Ok(false)
             }
+          }
 
-        - operator: flat-map
-          run: |
-            fn create_credit_debit_events(event: BusinessEvent) -> Result<Vec<DataEvent>, String> {
-              match event.operation {
-                BusinessOperation::Transfer(ev) => {
-                  let debit = DataEvent {
-                    iban: ev.sender.iban,
-                    name: ev.sender.account.name,
-                    timestamp: event.timestamp.clone(),
-                    operation: DataOperation::DebitAccount(
-                      Amount {
-                          amount: ev.amount,
-                          currency:ev.currency.clone(),
-                      })
-                  };
-                  let credit = DataEvent {
-                    iban: ev.beneficiary.iban,
-                    name: ev.beneficiary.account.name,
-                    timestamp: event.timestamp,
-                    operation: DataOperation::CreditAccount(
-                      Amount {
-                          amount: ev.amount,
-                          currency:ev.currency,
-                      })
-                  };
-                  Ok(vec![debit, credit])
-                }
-                _ => Err("Unexpected operation".to_string())
-              }           
-            }
+      - operator: flat-map
+        run: |
+          fn create_credit_debit_events(event: BusinessEvent) -> Result<Vec<DataEvent>, String> {
+            match event.operation {
+              BusinessOperation::Transfer(ev) => {
+                let debit = DataEvent {
+                  iban: ev.sender.iban,
+                  name: ev.sender.account.name,
+                  timestamp: event.timestamp.clone(),
+                  operation: DataOperation::DebitAccount(
+                    Amount {
+                        amount: ev.amount,
+                        currency:ev.currency.clone(),
+                    })
+                };
+                let credit = DataEvent {
+                  iban: ev.beneficiary.iban,
+                  name: ev.beneficiary.account.name,
+                  timestamp: event.timestamp,
+                  operation: DataOperation::CreditAccount(
+                    Amount {
+                        amount: ev.amount,
+                        currency:ev.currency,
+                    })
+                };
+                Ok(vec![debit, credit])
+              }
+              _ => Err("Unexpected operation".to_string())
+            }           
+          }
 
     sinks:
       - type: topic
@@ -468,14 +464,14 @@ services:
               name:
                 type: string
 
-    transforms:
-      steps:
-        - operator: assign-key
-          run: |
-            fn key_by_iban(event: DataEvent) -> Result<String, String> {
-              Ok(event.iban)
-            }
+    partition:
+      assign-key:
+        run: |
+          fn key_by_iban(event: DataEvent) -> Result<String, String> {
+            Ok(event.iban)
+          }
 
+      transforms:
         - operator: update-state
           run: |
             fn update_account_balance(event: DataEvent) -> Result<(), String> {
@@ -503,20 +499,18 @@ services:
         id: data-events
 
     transforms:
-      steps:
-        - operator: filter
-          run: |
-            fn get_debit_events(event: DataEvent) -> Result<bool, String> {
-              match event.operation {
-                DataOperation::DebitAccount(_) => Ok(true),
-                _ => Ok(false)
-              }
+      - operator: filter
+        run: |
+          fn get_debit_events(event: DataEvent) -> Result<bool, String> {
+            match event.operation {
+              DataOperation::DebitAccount(_) => Ok(true),
+              _ => Ok(false)
             }
+          }
 
     sinks:
       - type: topic
         id: debit-events
-
 
   # Copy Credit events to credit-events topic
   get-credit-events:
@@ -525,15 +519,14 @@ services:
         id: data-events
 
     transforms:
-      steps:
-        - operator: filter
-          run: |
-            fn get_credit_events(event: DataEvent) -> Result<bool, String> {
-              match event.operation {
-                DataOperation::CreditAccount(_) => Ok(true),
-                _ => Ok(false)
-              }
+      - operator: filter
+        run: |
+          fn get_credit_events(event: DataEvent) -> Result<bool, String> {
+            match event.operation {
+              DataOperation::CreditAccount(_) => Ok(true),
+              _ => Ok(false)
             }
+          }
 
     sinks:
       - type: topic

@@ -1,4 +1,4 @@
-apiVersion: 0.3.0
+apiVersion: 0.4.0
 meta:
   name: update-state-example
   version: 0.1.0
@@ -44,21 +44,20 @@ services:
                 type: f32
 
     transforms:
-      steps:
-        - operator: assign-key
-          run: |
-            fn key_by_id(event: Temp) -> Result<i32, String> {
-              Ok(event.id)
-            }
+      - operator: assign-key
+        run: |
+          fn key_by_id(event: Temp) -> Result<i32, String> {
+            Ok(event.id)
+          }
 
-        - operator: update-state
-          run: |
-            fn update_temperature(event: Temp) -> Result<(), String> {
-              let mut temp = temperature();
-              
-              temp.sensor = event.sensor;
-              temp.temperature = event.temperature;
-              temp.update();
+      - operator: update-state
+        run: |
+          fn update_temperature(event: Temp) -> Result<(), String> {
+            let mut temp = temperature();
+            
+            temp.sensor = event.sensor;
+            temp.temperature = event.temperature;
+            temp.update();
 
-              Ok(())
-            }
+            Ok(())
+          }
