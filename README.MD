@@ -29,9 +29,10 @@ fluvio cluster start
 Use cases using data pipelines:
 
 * [bank-processing](/use-cases/bank-processing/)
-* [http-callout](//use-cases/http-callout/)
-* [openai-callout](//use-cases/openai-callout/)
-* [word-counter](//use-cases/word-counter/)
+* [car-processing](/use-cases/car-processing/)
+* [http-callout](/use-cases/http-callout/)
+* [openai-callout](/use-cases/openai-callout/)
+* [word-counter](/use-cases/word-counter/)
 
 ## Functions
 
