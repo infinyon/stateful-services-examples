@@ -25,7 +25,7 @@ jobs:
             "use-cases/word-counter",
             "use-cases/openai-callout",
           ]
-          ssdk-version: [ssdk-preview6]
+          ssdk-version: [ssdk-preview7-dev]
       steps:
         - name: Checkout
           uses: actions/checkout@v3
@@ -52,9 +52,4 @@ jobs:
         - name: Run ssdk generate
           working-directory: ./${{ matrix.example_path }}
           run: |
-            ssdk generate
-        
-        - name: Run ssdk build
-          working-directory: ./${{ matrix.example_path }}
-          run: |
-            ssdk build
+            ssdk run --skip-running
