@@ -45,21 +45,21 @@ services:
           fn split_sequence(sentence: String) -> Result<Vec<String>, String> {
             Ok(sentence.split_whitespace().map(String::from).collect())
           }
-
-      - operator: assign-key
+    partition:
+      assign-key:
         run: |
           fn assign_key_word(word: String) -> Result<String, String> {
             Ok(word.to_lowercase().chars().filter(|c| c.is_alphanumeric()).collect())
           }
-
-      - operator: update-state
-        run: |
-          fn count_word(_word: String) -> Result<(), String> {
-            let mut state = count_per_word();
-            state.count += 1;
-            state.update();
-            Ok(())
-          }
+      transforms:
+        - operator: update-state
+          run: |
+            fn count_word(_word: String) -> Result<(), String> {
+              let mut state = count_per_word();
+              state.count += 1;
+              state.update();
+              Ok(())
+            }
 
   look-up-word:
     sources:
