@@ -81,7 +81,7 @@ ssdk build
 Run the pipeline:
 
 ```bash
- ssdk run --ui
+ssdk run --ui
 ```
 
 Use `--ui` to generate the graphical representation and run the Studio.
@@ -94,17 +94,13 @@ In the `./connectors` directory, download the connector binary, and start thecon
 
 ```bash
 cdk hub download infinyon/http-source@0.3.3
-```
-
-```bash
 cdk deploy start --ipkg infinyon-http-source-0.3.3.ipkg -c license-connector.yaml
-```
-
-```bash
 cdk deploy start --ipkg infinyon-http-source-0.3.3.ipkg -c car-connector.yaml
 ```
 
-To see the events, run `fluvio consume cars`.  For additional context, checkout [connectors](./connectors/).
+To see the events, run `fluvio consume cars`.  
+
+For additional context, checkout [connectors](./connectors/).
 
 
 #### 3. Check the results
@@ -176,7 +172,10 @@ This is used to determine when to flush window state for the tumbling window tha
 Each car event triggers an `http call-out` to gather additional information about the car maker:
 
 ```bash
-$ fluvio consume makers
+fluvio consume makers
+```
+
+```yaml
 {"continent":"Europe","country":"Germany","maker":"Audi"}
 {"continent":"Europe","country":"United Kingdom","maker":"McLaren"}
 {"continent":"Europe","country":"Italy","maker":"Fiat"}
@@ -191,7 +190,10 @@ Hit <Ctrl-C> to exit.
 All cars driving faster than `45 mph` are speeding:
 
 ```bash
-$ fluvio consume speeding
+fluvio consume speeding
+```
+
+```yaml
 Consuming records from 'speeding'
 {"color":"beige","license":"9HPJ645","location":"Saratoga","maker":"Maserati","model":"Levante","mph":46,"timestamp":"2024-03-15T13:50:27.425Z"}
 {"color":"grey","license":"0ZBM819","location":"Saratoga","maker":"Lexus","model":"RX","mph":62,"timestamp":"2024-03-15T13:50:28.925Z"}
@@ -207,7 +209,10 @@ Hit <Ctrl-C> to exit.
 Split the traffic into two streams based on the `location` field:
 
 ```bash
-$  fluvio consume sunnyvale
+fluvio consume sunnyvale
+```
+
+```yaml
 Consuming records from 'sunnyvale'
 {"car":"Tesla Model Y","color":"yellow","location":"Sunnyvale"}
 {"car":"Smart Fortwo","color":"yellow","location":"Sunnyvale"}
@@ -216,7 +221,9 @@ Consuming records from 'sunnyvale'
 ```
 
 ```bash
-$  fluvio consume saratoga 
+fluvio consume saratoga 
+```
+```yaml
 Consuming records from 'saratoga'
 {"car":"Subaru BRZ","color":"green","location":"Saratoga"}
 {"car":"Mazda Mazda3","color":"beige","location":"Saratoga"}
@@ -233,6 +240,9 @@ Count all cars seen at the Sunnyvale location by colors. As mentioned above, the
 
 ```bash
 fluvio consume car-colors
+```
+
+```yaml
 Consuming records from 'car-colors'
 [{"color":"beige","count":1},{"color":"perl","count":4},{"color":"orange","count":6},{"color":"blue","count":3},{"color":"green","count":1},{"color":"grey","count":3},{"color":"red","count":3},{"color":"black","count":4},{"color":"yellow","count":3}]
 [{"color":"perl","count":1},{"color":"beige","count":6},{"color":"yellow","count":2},{"color":"green","count":1},{"color":"black","count":2},{"color":"orange","count":3},{"color":"red","count":2},{"color":"white","count":3},{"color":"grey","count":1},{"color":"blue","count":5}]
@@ -247,7 +257,10 @@ You may use `--output json` for pretty formatting. Hit <Ctrl-C> to exit.
 The pipeline also detects anomalies by check if a license plate is seen in 2 different cars. To demonstrate this functionality, we are ingesting a data set that send an annomaly every 10 records (~5 sec).
 
 ```bash
-$ fluvio consume violations -O json
+fluvio consume violations -O json
+```
+
+```yaml
 Consuming records from 'violations'
 {
   "license": "1KFR357",
