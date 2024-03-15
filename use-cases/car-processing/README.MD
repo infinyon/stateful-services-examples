@@ -130,7 +130,9 @@ Aside from the offsets that saves the progress of consuming from topics, the pip
 * count by color
 * watermark
 
-**License Plates** state stores the license plates read from the `licenses` topic. This is used to check for stolen plates later in the pipeline.
+#### License Plates
+
+License Plates state stores the license plates read from the `licenses` topic. This is used to check for stolen plates later in the pipeline.
 
 ```bash
 >> show state save-license-plates/licence-plates/state --table
@@ -142,7 +144,9 @@ Aside from the offsets that saves the progress of consuming from topics, the pip
  ...
 ```
 
-**Count by Clates** collects the number of cars for each color. This window is flushed to the `car-colors` topic every 30 seconds.
+#### Count by Color
+
+Count-by-color stores the number of cars for each color in a particular window. The window is flushed to the `car-colors` topic every 30 seconds.
 
 ```bash
 >> show state count-by-color/count-by-color/state 
@@ -156,7 +160,9 @@ Aside from the offsets that saves the progress of consuming from topics, the pip
  yellow  1      2024-03-15T13:39:30Z:2024-03-15T13:40:00Z 
 ```
 
-**Watermark** tracks the cutoff timestamp for tumbling windows.
+#### Watermark
+
+Watermark tracks the cutoff timestamp for tumbling windows.
 
 ```bash
 >> show state count-by-color/count-by-color/watermark
@@ -252,7 +258,7 @@ Consuming records from 'car-colors'
 You may use `--output json` for pretty formatting. Hit <Ctrl-C> to exit.
 
 
-#### Annomaly Detection
+#### Detect Annomalies
 
 The pipeline also detects anomalies by check if a license plate is seen in 2 different cars. To demonstrate this functionality, we are ingesting a data set that send an annomaly every 10 records (~5 sec).
 
@@ -281,7 +287,7 @@ Consuming records from 'violations'
 
 For simplicity, the code assumes that the first car is always the owner, and the 2nd is the violator. 
 
-### Clean-up
+## Clean-up
 
 Note that your connectors will continue running in the background until you shut them down:
 
