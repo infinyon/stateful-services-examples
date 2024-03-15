@@ -321,9 +321,7 @@ services:
 
               let plates = licence_plates();
               let plate = plates
-                .clone().lazy().filter(
-                  col("id").eq(lit(car.license.clone()))
-                )
+                .clone().lazy().filter(col("id").eq(lit(car.license.clone())))
                 .collect().map_err(|e| e.to_string())?;
 
               if !plate.is_empty() {
