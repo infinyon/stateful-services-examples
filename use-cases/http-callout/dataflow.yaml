@@ -49,8 +49,10 @@ services:
 
     transforms:
       - operator: map
-        adaptors:
-          - http
+        dependencies:
+          - name: ssdk-http
+            git: "https://github.com/infinyon/ssdk-guest-http"
+            tag: "v0.3.0"
         run: |
           fn get_car_maker(car: Car) -> Result<Maker, String> {
             // Build Request

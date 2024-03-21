@@ -19,6 +19,8 @@ jobs:
             "functions/flat-map",
             "functions/map",
             "functions/ref-state",
+            "functions/merge",
+            "functions/split",
             "functions/update-state",
             "use-cases/bank-processing",
             "use-cases/http-callout",
