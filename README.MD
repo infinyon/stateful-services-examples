@@ -43,6 +43,8 @@ Simple functionality centric examples.
 * [filter-map](/functions/filter-map/)
 * [flat-map](/functions/flat-map/)
 * [update-state](/functions/update-state/)
+* [split](/functions/split/)
+* [merge](/functions/merge/)
 
 
 ## References
