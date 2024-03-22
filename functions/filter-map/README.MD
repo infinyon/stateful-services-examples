@@ -2,12 +2,12 @@
 
 Example of how to use the `filter-map` operator. In this example, the filter-map operation transforms sentences over 10 characters in length to uppercase and drops all others.
 
-* Checkout the [data-pipeline.yaml](./data-pipeline.yaml).
+* Checkout the [dataflow.yaml](./dataflow.yaml).
 * Make sure to [Install SSDK and start a Fluvio cluster].
 
 ### 1. Run Data Pipeline
 
-With the `data-pipeline.yaml` file in the current directory, run the following commands:
+With the `dataflow.yaml` file in the current directory, run the following commands:
 
 ```bash
 ssdk generate

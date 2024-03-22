@@ -1,4 +1,4 @@
-apiVersion: 0.3.0
+apiVersion: 0.4.0
 meta:
   name: split
   version: 0.1.0
@@ -23,14 +23,14 @@ types:
       truck:
         type: string
       license:
-        type: string        
+        type: string
   sedan:
     type: object
     properties:
       sedan:
         type: string
       license:
-        type: string        
+        type: string
 
 topics:
   cars:
@@ -51,15 +51,6 @@ services:
     sources:
       - type: topic
         id: cars
-
-    # TODO: To be removed in preview-7
-    transforms:
-      steps:
-        - operator: map
-          run: |
-            fn dummy_map(car: Car) -> Result<Car, String> {
-              Ok(car)
-            }
 
     sinks:
       - type: topic

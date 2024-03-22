@@ -63,7 +63,7 @@ The connector sends events to `licenses` topic.
 
 ## Step-by-step
 
-Take a look at the [data-pipeline.yaml](./data-pipeline.yaml) to get an idea of what we're doing.
+Take a look at the [dataflow.yaml](./dataflow.yaml) to get an idea of what we're doing.
 
 Make sure to [Install SSDK and start a Fluvio cluster].
 

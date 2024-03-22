@@ -1,4 +1,4 @@
-apiVersion: 0.3.0
+apiVersion: 0.4.0
 meta:
   name: filter-example
   version: 0.1.0
@@ -25,12 +25,11 @@ services:
         id: sentences
 
     transforms:
-      steps:
-        - operator: filter
-          run: |
-            fn filter_questions(input: String) -> Result<bool, String> {
-              Ok(input.contains("?"))
-            }
+      - operator: filter
+        run: |
+          fn filter_questions(input: String) -> Result<bool, String> {
+            Ok(input.contains("?"))
+          }
 
     sinks:
       - type: topic
