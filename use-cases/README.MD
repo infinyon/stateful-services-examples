@@ -5,3 +5,4 @@
 * [http-callout](./http-callout/)
 * [openai-callout](./openai-callout/)
 * [word-counter](./word-counter/)
+* [word-probe](./word-probe/)
