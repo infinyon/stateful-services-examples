@@ -33,6 +33,7 @@ Full featured data pipelines:
 * [http-callout](/use-cases/http-callout/)
 * [openai-callout](/use-cases/openai-callout/)
 * [word-counter](/use-cases/word-counter/)
+* [word-probe](/use-cases/word-probe/)
 
 ## Functions
 
