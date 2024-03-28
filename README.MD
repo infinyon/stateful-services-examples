@@ -26,7 +26,7 @@ fluvio cluster start
 
 ## Use Cases
 
-Use cases using data pipelines:
+Full featured data pipelines:
 
 * [bank-processing](/use-cases/bank-processing/)
 * [car-processing](/use-cases/car-processing/)
